@@ -1,7 +1,10 @@
 require("dotenv").config();
 const startJobs = require("./Jobs/start");
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_CONNECT);
+mongoose.connect(process.env.DB_CONNECT, {
+  serverSelectionTimeoutMS: 30000, // Increase to 30 seconds
+  socketTimeoutMS: 45000
+});
 
 // mongoose.connect("mongodb://localhost:27017/invhrms");
 
