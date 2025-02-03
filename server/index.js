@@ -19,8 +19,9 @@ app.set("views", "./views");
 const allowedOrigins = ['*'];
 
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: "http://www.hrmsdev.invezzatech.com/register",
   methodS: "GET, POST, PUT, DELETE, PATCH, HEAD",
+  allowedOrigins: ['Content-type', 'Authorization'],
   credentials: true,
 };
 
