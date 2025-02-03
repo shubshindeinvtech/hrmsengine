@@ -27,12 +27,12 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: "*",
   methodS: "GET, POST, PUT, DELETE, PATCH, HEAD",
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use(express.static("public"));
