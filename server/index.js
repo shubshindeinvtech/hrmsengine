@@ -16,14 +16,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
-const allowedOrigins = [
-  "http://192.168.1.37:5173",
-  "http://localhost:5174",
-  "http://172.30.32.1:5173",
-  "https://invezzahrms.shub.space",
-  "https://engineinv.vercel.app",
-  "/*",
-];
+const allowedOrigins = ['*'];
 
 const corsOptions = {
   origin: allowedOrigins,
