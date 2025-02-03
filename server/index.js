@@ -23,11 +23,12 @@ const allowedOrigins = [
   "https://invezzahrms.shub.space",
   "https://engineinv.vercel.app",
   "https://www.hrmsdev.invezzatech.com",
+  "https://hrmsdev.invezzatech.com",
   "/*",
 ];
 
 const corsOptions = {
-  origin: "*",
+  origin: allowedOrigins,
   methodS: "GET, POST, PUT, DELETE, PATCH, HEAD",
   credentials: true,
 };
