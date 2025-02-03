@@ -169,7 +169,9 @@ const forgotPassword = async (req, res) => {
         We hope this message finds you well. You have requested to reset your password for the Invezza HRMS Portal. Please click the link below to proceed with resetting your password:
       </p>
       <div style="padding: 15px; background-color: white; border-left: 4px solid #3b82f6; border-radius: 6px;">
-        
+        <p style="margin: 10px 0; font-size: 1rem; color: #333;">
+          <a href="https://hrmsapi.invezzatech.com/api/resetpassword?token=${randonString}" style="color: #3b82f6; text-decoration: none; font-weight: bold;">Click here to reset your password</a>
+        </p>
       </div>
       <p style="margin-top: 20px; color: #555; font-size: 1rem;">
         If you did not request this, please ignore this email.
@@ -197,7 +199,7 @@ const forgotPassword = async (req, res) => {
 
     await passwordReset.save();
 
-    sendMail(userData.email, "Reset Password", msg);
+    // sendMail(userData.email, "Reset Password", msg);
 
     return res.status(200).json({
       success: true,
