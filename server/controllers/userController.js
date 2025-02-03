@@ -170,7 +170,7 @@ const forgotPassword = async (req, res) => {
       </p>
       <div style="padding: 15px; background-color: white; border-left: 4px solid #3b82f6; border-radius: 6px;">
         <p style="margin: 10px 0; font-size: 1rem; color: #333;">
-          <a href="https://www.hrmsapi.invezzatech.com/api/resetpassword?token=${randonString}" style="color: #3b82f6; text-decoration: none; font-weight: bold;">Click here to reset your password</a>
+          <a href="${process.env.REACT_APP_API_URL}/api/resetpassword?token=${randonString}" style="color: #3b82f6; text-decoration: none; font-weight: bold;">Click here to reset your password</a>
         </p>
       </div>
       <p style="margin-top: 20px; color: #555; font-size: 1rem;">
