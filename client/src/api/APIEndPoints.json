@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://147.93.96.9:4000/",
+    "baseUrl": "http://147.93.96.9:4000/",
     "endpoints": {
         "registeruser": "api/createuser",
         "forgotpassword": "api/forgotpassword",
