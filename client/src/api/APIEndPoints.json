@@ -1,7 +1,5 @@
 {
-    "baseUr": "http://localhost:3000/",
-    "baseUrl": "http://147.93.96.9/",
-    "baseUl": "https://engineinv.onrender.com/",
+    "baseUrl": "http://147.93.96.9:4000/",
     "endpoints": {
         "registeruser": "api/createuser",
         "forgotpassword": "api/forgotpassword",
