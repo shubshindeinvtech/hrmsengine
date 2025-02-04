@@ -143,7 +143,7 @@ const forgotPassword = async (req, res) => {
 
     const { email } = req.body;
 
-    const userData = await Employee.findOne({ email: email });
+    const userData = await Employee.findOne({ email });
 
     if (!userData) {
       return res.status(400).json({
