@@ -1,7 +1,7 @@
 require("dotenv").config();
 const startJobs = require("./Jobs/start");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://admin:spiderman@127.0.0.1:27017/admin");
+mongoose.connect(process.env.DB_CONNECT);
 
 let ejs = require("ejs");
 
