@@ -1,7 +1,7 @@
 require("dotenv").config();
 const startJobs = require("./Jobs/start");
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, () => console.log("MongoDB Connected"));
+mongoose.connect("mongodb://admin:spiderman@127.0.0.1:27017/admin", { useNewUrlParser: true }, () => console.log("MongoDB Connected"));
 
 let ejs = require("ejs");
 
