@@ -577,7 +577,7 @@ const loginEmployee = async (req, res) => {
     if (!employeeData) {
       return res.status(400).json({
         success: false,
-        msg: "Invalid Email And Password use correct one",
+        msg: "Invalid Email And Password",
       });
     }
 
@@ -597,7 +597,7 @@ const loginEmployee = async (req, res) => {
     if (!isPasswordMatch) {
       return res.status(400).json({
         success: false,
-        msg: "Invalid Email And Password use correct one",
+        msg: "Invalid Email And Password",
       });
     }
 
