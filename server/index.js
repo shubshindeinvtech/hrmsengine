@@ -1,10 +1,7 @@
 require("dotenv").config();
 const startJobs = require("./Jobs/start");
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_CONNECT, {
-  serverSelectionTimeoutMS: 30000, // Increase to 30 seconds
-  socketTimeoutMS: 45000
-});
+mongoose.connect(process.env.DB_CONNECT);
 
 // mongoose.connect("mongodb://localhost:27017/invhrms");
 
@@ -31,12 +28,12 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: "*",
+  origin: allowedOrigins,
   methodS: "GET, POST, PUT, DELETE, PATCH, HEAD",
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use(express.static("public"));
