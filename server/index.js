@@ -1,7 +1,11 @@
 require("dotenv").config();
 const startJobs = require("./Jobs/start");
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_CONNECT);
+mongoose.connect(process.env.DB_CONNECT, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 10000
+});
 
 // mongoose.connect("mongodb://localhost:27017/invhrms");
 
