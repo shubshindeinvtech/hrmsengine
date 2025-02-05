@@ -10,7 +10,7 @@ const EXCLUDE_ID = "6687d8abecc0bcb379e20227"; // Admin _id exclude
 const addLeaves = async (req, res) => {
   try {
     // Get all employee data from the Employee model
-    const employees = await Employee.find().select("_id dateofjoining");
+    const employees = await Employee.find().select("_id dateofjoining name");
 
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -56,6 +56,7 @@ const addLeaves = async (req, res) => {
     await Promise.all(
       employees.map(async (employee) => {
         const employee_id = employee._id;
+        const ename = employee.name;
         const dateOfJoining = new Date(employee.dateofjoining);
         const probationEndDate = new Date(dateOfJoining);
         probationEndDate.setMonth(probationEndDate.getMonth() + 6);
@@ -91,7 +92,7 @@ const addLeaves = async (req, res) => {
           if (leaveRecord.leaves.total != null) {
             // Skip employees who already have a leave record with a total not null
             console.log(
-              `Employee _id: ${employee_id} probationEndDate: ${probationEndDate}, already has leaves: ${leaveRecord.leaves.total}`
+              `Employee _id: ${ename} probationEndDate: ${probationEndDate}, already has leaves: ${leaveRecord.leaves.total}`
             );
             return;
           } else {
@@ -595,7 +596,7 @@ const approveLeave = async (req, res) => {
 // Condition 3: If currentStatus is 1 and applicationstatus is 2 (reverse the balances like Condition 2)
 // If currentStatus is 0 and applicationstatus is 2, only update the status without changing balances
 
-addLeaves();
+// addLeaves();
 // updateOptionalHolidaysOnJan1st();
 
 // const jobAddLeaves = new CronJob("*/1 * * * *", () => {

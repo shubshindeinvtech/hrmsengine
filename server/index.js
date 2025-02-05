@@ -36,6 +36,11 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
+// Add this route for the root path
+app.get("/", (req, res) => {
+  res.render("index");
+});
+
 //admin routes
 const adminRoute = require("./routes/adminRoute");
 app.use("/api/admin", adminRoute);
