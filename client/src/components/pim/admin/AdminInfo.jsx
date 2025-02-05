@@ -726,17 +726,17 @@ const AdminInfo = () => {
               <label className=" col-span-4 ">Last Working datesa</label>
               {editMode ? (
                 <div className="col-span-8">
-                  {/* {employee.lastwd ? ( */}
-                  <input
-                    type="date"
-                    name="lastwd"
-                    value={formData.lastwd || ""}
-                    onChange={handleInputChange}
-                    className="bg-sky-100 w-full px-2 py-1 border  dark:bg-neutral-800 rounded-md"
-                  />
-                  {/* // ) : (
-                    // ""
-                  // )} */}
+                  {employee.lastwd ? (
+                    <input
+                      type="date"
+                      name="lastwd"
+                      value={formData.lastwd || ""}
+                      onChange={handleInputChange}
+                      className="bg-sky-100 w-full px-2 py-1 border  dark:bg-neutral-800 rounded-md"
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
               ) : (
                 <div className="col-span-8">
