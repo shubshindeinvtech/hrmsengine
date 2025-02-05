@@ -937,6 +937,7 @@ const updateemployeebyadmin = async (req, res) => {
 
     const {
       _id,
+      empid,
       name,
       email,
       password,
@@ -984,6 +985,7 @@ const updateemployeebyadmin = async (req, res) => {
       status,
       auth,
       _id,
+      empid,
       name,
       password,
       phone,

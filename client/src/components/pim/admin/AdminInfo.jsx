@@ -154,6 +154,7 @@ const AdminInfo = () => {
       // Construct the payload with individual fields
       const payload = {
         _id: formData._id,
+        empid: formData.empid,
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
@@ -443,9 +444,24 @@ const AdminInfo = () => {
           </div>
           <div className="grid grid-cols-12 col-span-12 items-center gap-2 justify-between">
             <label className="  col-span-4">Employee ID</label>
-            <div className="col-span-8">
+            {editMode ? (
+              <div className="col-span-8">
+                <input
+                  type="number"
+                  name="empid"
+                  value={formData.empid || ""}
+                  onChange={handleInputChange}
+                  className="w-full px-2 py-1 border bg-sky-50 dark:bg-neutral-800 rounded-md"
+                />
+              </div>
+            ) : (
+              <div className="col-span-8">
+                <h3 className="px-2 py-1 font-semibold">{formData.empid}</h3>
+              </div>
+            )}
+            {/* <div className="col-span-8">
               <h3 className="px-2 py-1 font-semibold">{formData.empid}</h3>
-            </div>
+            </div> */}
           </div>
           <div className="grid grid-cols-12 col-span-12 items-center gap-2 justify-between">
             <label className="  col-span-4">_ID</label>
