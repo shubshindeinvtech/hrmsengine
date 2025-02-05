@@ -461,7 +461,7 @@ const approveLeave = async (req, res) => {
       } else if (leaveType === "Optional holiday") {
         if (
           findemployeetominus.optionalholiday.available -
-            daysofleaveapplication >=
+          daysofleaveapplication >=
           0
         ) {
           findemployeetominus.optionalholiday.available -=
@@ -540,24 +540,22 @@ const approveLeave = async (req, res) => {
       </p>
       <div style="padding: 15px; background-color: white; border-left: 4px solid #3b82f6; border-radius: 6px;">
         <p style="margin: 0; font-size: 1rem; color: #333;">
-          <strong>Leave Period:</strong> ${currentApplication.fromdate} to ${
-      currentApplication.todate
-    }
+          <strong>Leave Period:</strong> ${currentApplication.fromdate} to ${currentApplication.todate
+      }
         </p>
         <p style="margin: 10px 0 0; font-size: 1rem; color: #333;">
           <strong>Total Days:</strong> ${currentApplication.totaldays}
         </p>
         <p style="margin: 10px 0 0; font-size: 1rem; color: #333;">
           <strong>Status:</strong> 
-          ${
-            newRecord.applicationstatus === 1
-              ? `<span style="color: green; font-weight: bold;">Approved</span>`
-              : newRecord.applicationstatus === 0
-              ? `<span style="color: orange; font-weight: bold;">Pending</span>`
-              : newRecord.applicationstatus === 2
-              ? `<span style="color: red; font-weight: bold;">Declined</span>`
-              : `<span style="color: gray; font-weight: bold;">Unknown</span>`
-          }
+          ${newRecord.applicationstatus === 1
+        ? `<span style="color: green; font-weight: bold;">Approved</span>`
+        : newRecord.applicationstatus === 0
+          ? `<span style="color: orange; font-weight: bold;">Pending</span>`
+          : newRecord.applicationstatus === 2
+            ? `<span style="color: red; font-weight: bold;">Declined</span>`
+            : `<span style="color: gray; font-weight: bold;">Unknown</span>`
+      }
         </p>
       </div>
     </div>
@@ -597,7 +595,7 @@ const approveLeave = async (req, res) => {
 // Condition 3: If currentStatus is 1 and applicationstatus is 2 (reverse the balances like Condition 2)
 // If currentStatus is 0 and applicationstatus is 2, only update the status without changing balances
 
-// addLeaves();
+addLeaves();
 // updateOptionalHolidaysOnJan1st();
 
 // const jobAddLeaves = new CronJob("*/1 * * * *", () => {
