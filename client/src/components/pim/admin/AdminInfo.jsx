@@ -163,6 +163,7 @@ const AdminInfo = () => {
         maritialstatus: formData.maritialstatus,
         bloodgroup: formData.bloodgroup,
         dateofjoining: formData.dateofjoining,
+        lastwd: formData.lastwd,
         status: formData.status,
         auth: formData.auth,
         designation: formData.designation,
@@ -722,9 +723,10 @@ const AdminInfo = () => {
             </div>
 
             <div className="grid grid-cols-12 items-center gap-2 col-span-12 md:col-span-6 justify-between">
-              <label className=" col-span-4 ">Last Working date</label>
-              {/* {editMode ? (
+              <label className=" col-span-4 ">Last Working datesa</label>
+              {editMode ? (
                 <div className="col-span-8">
+                  {/* {employee.lastwd ? ( */}
                   <input
                     type="date"
                     name="lastwd"
@@ -732,12 +734,15 @@ const AdminInfo = () => {
                     onChange={handleInputChange}
                     className="bg-sky-100 w-full px-2 py-1 border  dark:bg-neutral-800 rounded-md"
                   />
+                  {/* // ) : (
+                    // ""
+                  // )} */}
                 </div>
-              ) : ( */}
-              <div className="col-span-8">
-                <h3 className="px-2 py-1 font-semibold">{employee.lastwd}</h3>
-              </div>
-              {/* )} */}
+              ) : (
+                <div className="col-span-8">
+                  <h3 className="px-2 py-1 font-semibold">{employee.lastwd}</h3>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-12 items-center gap-2 col-span-12 md:col-span-6 justify-between">

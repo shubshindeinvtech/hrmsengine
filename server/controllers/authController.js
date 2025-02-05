@@ -949,6 +949,7 @@ const updateemployeebyadmin = async (req, res) => {
       maritialstatus,
       bloodgroup,
       dateofjoining,
+      lastwd,
       designation,
       department,
       reportingto,
@@ -995,6 +996,7 @@ const updateemployeebyadmin = async (req, res) => {
       maritialstatus,
       bloodgroup,
       dateofjoining,
+      lastwd,
       designation,
       department,
       reportingto,
@@ -1025,12 +1027,17 @@ const updateemployeebyadmin = async (req, res) => {
     // }
 
     // Update last working day logic based on status
-    if (req.body.status === 0) {
-      const today = new Date();
-      updateObj.lastwd = today.toISOString().split("T")[0]; // Format as "YYYY-MM-DD"
-    } else if (req.body.status === 1) {
+    if (updateObj.lastwd === null) {
+      if (req.body.status === 0) {
+        const today = new Date();
+        updateObj.lastwd = today.toISOString().split("T")[0]; // Format as "YYYY-MM-DD"
+      }
+    }
+
+    if (req.body.status === 1) {
       updateObj.lastwd = null; // Remove lastwd
     }
+
 
     const updatedEmployeeData = await Employee.findByIdAndUpdate(
       { _id: _id },
