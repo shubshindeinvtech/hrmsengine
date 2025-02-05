@@ -327,7 +327,7 @@ const updateOptionalHolidaysOnJan1st = async () => {
 
 const updateLeaveBalanceForNewEmployee = async (req, res) => {
   try {
-    const Admin_id = "6687d8abecc0bcb379e20227";
+    const Admin_id = "67a1f46ab05236c93a55c166";
     const rawData = await leavebalance.findOne({ employee_id: Admin_id });
 
     const { employee_id } = req.body;
