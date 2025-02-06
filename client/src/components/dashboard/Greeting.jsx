@@ -77,8 +77,6 @@ export default function Greeting() {
       // If user is still punched in, calculate elapsed time until now
       elapsedSeconds = Math.floor((now - intime) / 1000);
     }
-    //width: 1.13272%;
-    //
 
     const remainingSeconds = Math.max(0, totalSeconds - elapsedSeconds);
 

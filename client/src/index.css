@@ -75,12 +75,13 @@ input[type="file"]::file-selector-button:active {
 body {
   /* background-color: #D9D9D9; */
   font-family: euclid;
-  font-size: 14px;
+  /* font-size: 14px; */
   /* background-image: url('./assets/images/bg.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100vw; */
   scroll-behavior: smooth;
+  @apply text-xs xl:text-sm
 }
 
 select {
