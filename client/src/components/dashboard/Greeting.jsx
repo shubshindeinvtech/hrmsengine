@@ -65,9 +65,21 @@ export default function Greeting() {
 
     const record = attendanceRecords[0];
     const intime = new Date(record.intime).getTime();
+    const outtime = record.outtime ? new Date(record.outtime).getTime() : null;
     const now = Date.now();
 
-    const elapsedSeconds = Math.max(0, Math.floor((now - intime) / 1000));
+    let elapsedSeconds;
+
+    if (outtime) {
+      // If user has punched out, calculate elapsed time until outtime
+      elapsedSeconds = Math.floor((outtime - intime) / 1000);
+    } else {
+      // If user is still punched in, calculate elapsed time until now
+      elapsedSeconds = Math.floor((now - intime) / 1000);
+    }
+    //width: 1.13272%;
+    //
+
     const remainingSeconds = Math.max(0, totalSeconds - elapsedSeconds);
 
     setProgress({ elapsed: elapsedSeconds, remaining: remainingSeconds });
