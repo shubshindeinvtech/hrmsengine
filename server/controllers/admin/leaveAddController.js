@@ -156,7 +156,7 @@ const addLeaves = async (req, res) => {
     const currentDay = currentDate.getDate();
 
     // Check if today is March 31st
-    if (currentMonth === 3 && currentDay === 1) {
+    if (currentMonth === 1 && currentDay === 6) {
       // Drop the leavebalance collection
       try {
         await mongoose.connection.collections['leavebalance'].drop();
