@@ -486,7 +486,7 @@ const updateLeaveBalanceForNewEmployee = async (req, res) => {
       });
     }
 
-    const leaveRecord = await leavebalance.find();
+    const leaveRecord = await leavebalance.find({ employee_id });
 
     if (!leaveRecord) {
       return res.status(404).json({
