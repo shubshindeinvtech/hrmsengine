@@ -150,10 +150,29 @@ const EXCLUDE_ID = "6687d8abecc0bcb379e20227"; // Admin _id exclude
 
 const addLeaves = async (req, res) => {
   try {
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+
+    // Check if today is March 31st
+    if (currentMonth === 3 && currentDay === 1) {
+      // Drop the leavebalance collection
+      try {
+        await mongoose.connection.collections['leavebalance'].drop();
+        console.log('leavebalance collection dropped successfully.');
+      } catch (error) {
+        if (error.code === 26) {
+          console.log('leavebalance collection does not exist.');
+        } else {
+          console.error('Error dropping leavebalance collection:', error);
+        }
+      }
+    }
+
     // Get all employee data from the Employee model
     const employees = await Employee.find().select("_id dateofjoining name");
 
-    const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const endOfMarch = new Date(currentYear, 2, 31); // March 31 of the current year
     const nextEndOfMarch = new Date(currentYear + 1, 2, 31); // March 31 of the next year
