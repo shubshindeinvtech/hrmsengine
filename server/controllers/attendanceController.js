@@ -339,7 +339,7 @@ const markEmployeesOut = async () => {
   }
 };
 
-const markAllout = new CronJob("59 17 * * *", markEmployeesOut);
+const markAllout = new CronJob("29 18 * * *", markEmployeesOut);
 
 module.exports = {
   markAttendance,
