@@ -528,7 +528,9 @@ const AdminInfo = () => {
                 </div>
               ) : (
                 <div className="col-span-8">
-                  <h3 className="px-2 py-1 font-semibold">{employee.dob}</h3>
+                  <h3 className="px-2 py-1 font-semibold">
+                    {new Date(employee.dob).toLocaleDateString("en-GB")}
+                  </h3>
                 </div>
               )}
             </div>
@@ -553,9 +555,9 @@ const AdminInfo = () => {
                     <option value="" disabled>
                       Select Gender
                     </option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
               ) : (

@@ -654,7 +654,9 @@ const UserProfile = () => {
                     className="border px-2 py-1 w-3/4 bg-sky-100 dark:bg-neutral-800 rounded-md"
                   />
                 ) : (
-                  <strong>{formData.dob}</strong>
+                  <strong>
+                    {new Date(formData.dob).toLocaleDateString("en-GB")}
+                  </strong>
                 )}
               </div>
               <div className="col-span-12 lg:col-span-6 flex gap-2 items-center">
@@ -668,9 +670,9 @@ const UserProfile = () => {
                     className="border px-2 py-1 w-3/4 bg-sky-100 dark:bg-neutral-800 rounded-md"
                   >
                     <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
                   </select>
                 ) : (
                   <strong>{formData.gender}</strong>
