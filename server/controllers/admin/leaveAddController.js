@@ -201,6 +201,14 @@ const addLeaves = async (req, res) => {
         const probationEndDate = new Date(dateOfJoining);
         probationEndDate.setMonth(probationEndDate.getMonth() + 6);
 
+        // Skip employees with future probation end dates
+        if (probationEndDate > currentDate) {
+          console.log(
+            `Skipping employee ${ename} with future probation end date: ${probationEndDate}`
+          );
+          return;
+        }
+
         // Calculate total leaves based on the probation end date
         let totalLeaves = 0;
         try {
@@ -295,6 +303,7 @@ const addLeaves = async (req, res) => {
     }
   }
 };
+
 
 
 const addHolidays = async (req, res) => {
