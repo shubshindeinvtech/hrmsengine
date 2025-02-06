@@ -122,7 +122,7 @@ const addLeaves = async (req, res) => {
         }
 
         console.log(
-          `_id: ${employee_id}, probationEndDate: ${probationEndDate}, totalLeaves: ${totalLeaves}`
+          `_id: ${ename}, probationEndDate: ${probationEndDate}, totalLeaves: ${totalLeaves}`
         );
       })
     );
@@ -341,7 +341,7 @@ const updateLeaveBalanceForNewEmployee = async (req, res) => {
       });
     }
 
-    const leaveRecord = await leavebalance.findOne({ employee_id });
+    const leaveRecord = await leavebalance.find();
 
     if (!leaveRecord) {
       return res.status(404).json({
