@@ -498,7 +498,7 @@ const updateLeaveBalanceForNewEmployee = async (req, res) => {
     // Clone specific fields from rawData to leaveRecord
     leaveRecord.optionalholiday.optionalholidaylist = [
       ...rawData.optionalholiday.optionalholidaylist,
-    ];
+    ] || null;
     leaveRecord.mandatoryholiday = [...rawData.mandatoryholiday];
     leaveRecord.weekendHoliday = [...rawData.weekendHoliday];
 
