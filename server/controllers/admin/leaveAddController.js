@@ -173,7 +173,7 @@ const addLeaves = async (req, res) => {
     };
 
     // Check if today is March 31
-    if (currentDate.getDate() === 6 && currentDate.getMonth() === 1) {
+    if (currentDate.getDate() === 1 && currentDate.getMonth() === 3) {
       // Delete all documents in the leavebalance collection
       await leavebalance.deleteMany({});
       console.log('All documents in the leavebalance collection have been deleted. and Today is not 1 april to renew leaves');
