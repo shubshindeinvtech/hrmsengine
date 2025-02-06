@@ -159,7 +159,7 @@ const addLeaves = async (req, res) => {
     if (currentMonth === 1 && currentDay === 6) {
       // Drop the leavebalance collection
       try {
-        await mongoose.connection.collections['leavebalance'].drop();
+        await leavebalance.drop();
         console.log('leavebalance collection dropped successfully.');
       } catch (error) {
         if (error.code === 26) {
