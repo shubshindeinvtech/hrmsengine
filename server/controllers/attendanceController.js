@@ -3,6 +3,8 @@ const LeaveApplication = require("../model/leaveApplicationModel"); // Adjust th
 const Employee = require("../model/employeeModel");
 const LeaveBalance = require("../model/leaveBalanceModel");
 const { validationResult } = require("express-validator");
+const { sendLog } = require('../controllers/admin/settingController');
+
 
 const { CronJob } = require("cron");
 
@@ -134,6 +136,9 @@ const markAttendance = async (req, res) => {
 
       await attendance.save();
     }
+
+    sendLog(`employees ${employee_id} ${mark === "In" ? "punch in" : "punch out"}`, "info")
+
 
     return res
       .status(200)

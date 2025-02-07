@@ -798,6 +798,8 @@ const deleteEmployee = async (req, res) => {
     // Delete the employee
     await Employee.findByIdAndDelete(id);
 
+    sendLog(`${id} employee deleted`, "info")
+
     return res.status(200).json({
       success: true,
       msg: "Employee deleted successfully",
@@ -1106,6 +1108,9 @@ const updateemployeebyadmin = async (req, res) => {
       `Invezza HRMS Portal Account Details Updated`,
       mailContent
     );
+
+    sendLog(`${updatedEmployeeData.name} details updated by admin`, "info")
+
 
     return res.status(200).json({
       success: true,

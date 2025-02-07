@@ -1,6 +1,8 @@
 const Client = require("../../model/clientModel");
 // const Employee = require("../../model/employeeModel");
 const Project = require("../../model/projectModel");
+const { sendLog } = require('./settingController');
+
 
 const { validationResult } = require("express-validator");
 
@@ -38,6 +40,7 @@ const addClient = async (req, res) => {
     const isExist = await Client.findOne({ email });
 
     if (isExist) {
+      sendLog(`client is Already Exist with ${email}`, "error")
       return res.status(400).json({
         success: false,
         msg: "Client is Already Exist",
@@ -64,6 +67,8 @@ const addClient = async (req, res) => {
     });
 
     const clientData = await newClientData.save();
+    sendLog(`new client added with ${email}`, "info")
+
     return res.status(200).json({
       success: true,
       msg: "Client Added Successfully",
@@ -144,6 +149,8 @@ const updateClient = async (req, res) => {
     );
 
     // const clientData = await updateClientData.save();
+    sendLog(`${email}'s client details updated`, "info")
+
     return res.status(200).json({
       success: true,
       msg: "Client Updated Successfully",
@@ -355,6 +362,9 @@ const softDeleteClient = async (req, res) => {
 
     // Set isdeleted = true
     await Client.updateOne({ _id: clientid }, { isdeleted: true });
+
+    sendLog(`client with is ${clientid} has been soft deleted successfully`, "info")
+
 
     res.status(200).json({
       success: true,

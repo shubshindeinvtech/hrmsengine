@@ -4,6 +4,8 @@ const leaveapplication = require("../../model/leaveApplicationModel");
 const Employee = require("../../model/employeeModel");
 const { CronJob } = require("cron");
 const { sendMail } = require("../../helpers/mailer");
+const { sendLog } = require('./settingController');
+
 
 const EXCLUDE_ID = "6687d8abecc0bcb379e20227"; // Admin _id exclude
 
@@ -176,8 +178,10 @@ const addLeaves = async (req, res) => {
     if (currentDate.getDate() === 1 && currentDate.getMonth() === 3) {
       // Delete all documents in the leavebalance collection
       await leavebalance.deleteMany({});
+      sendLog("this is 1 april's cron with adding new leaves for all employees", "info")
       console.log('All documents in the leavebalance collection have been deleted. and Today is not 1 april to renew leaves');
     } else {
+      sendLog("this is monthly cron with adding leave for probations completion employees", "info")
       console.log('Today is not 1 april to renew leave');
     }
 
@@ -723,6 +727,9 @@ const approveLeave = async (req, res) => {
       `Invezza HRMS Portal Leave Application Status`,
       mailContent
     );
+
+    sendLog(`${employeeData.email}'s leave application status updated`, "info")
+
 
     return res.status(200).json({
       success: true,

@@ -1,5 +1,61 @@
 const Setting = require("../../model/settingsModel");
 
+const clients = [];
+
+const formatDate = (date) => {
+  const options = {
+    timeZone: 'Asia/Kolkata', // Force IST
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  };
+
+  const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(date);
+
+  // Convert format from DD/MM/YYYY, hh:mm AM/PM → DD-MM-YYYY hh:mmAM/PM
+  return formattedDate.replace(/\//g, '-').replace(/\s/g, '');
+};
+
+const log = async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins (Adjust as needed)
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  res.flushHeaders(); // Ensure headers are sent immediately
+
+  clients.push(res); // Store client connection
+  res.write(`data: ${JSON.stringify({ timestamp: formatDate(new Date()), message: "Connected to log stream", level: "info" })}\n\n`);
+
+  // Handle client disconnect
+  req.on("close", () => {
+    clients.splice(clients.indexOf(res), 1);
+    console.log("Client disconnected. Total clients:", clients.length);
+    res.end();
+  });
+};
+
+
+
+// Function to send logs to all connected clients
+const sendLog = (message, level = "info") => {
+  const logEntry = JSON.stringify({
+    timestamp: formatDate(new Date()),
+    message,
+    level,
+  });
+
+  clients.forEach((client) => {
+    client.write(`data: ${logEntry}\n\n`);
+  });
+};
+
+
 // timesheet
 const updateTimesheetLimit = async (req, res) => {
   try {
@@ -16,6 +72,8 @@ const updateTimesheetLimit = async (req, res) => {
       { $set: updateFields }, // Dynamically updates the provided fields
       { new: true, upsert: true } // Returns the updated document and creates one if it doesn't exist
     );
+
+    sendLog(`timesheet limits updated by admin`, "info")
 
     return res.status(200).json({
       success: true,
@@ -383,60 +441,7 @@ const getAllSettings = async (req, res) => {
   }
 };
 
-const clients = [];
 
-const formatDate = (date) => {
-  const options = {
-    timeZone: 'Asia/Kolkata', // Force IST
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  };
-
-  const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(date);
-
-  // Convert format from DD/MM/YYYY, hh:mm AM/PM → DD-MM-YYYY hh:mmAM/PM
-  return formattedDate.replace(/\//g, '-').replace(/\s/g, '');
-};
-
-const log = async (req, res) => {
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache, no-transform");
-  res.setHeader("Connection", "keep-alive");
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins (Adjust as needed)
-  res.setHeader("Access-Control-Allow-Methods", "GET");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  res.flushHeaders(); // Ensure headers are sent immediately
-
-  clients.push(res); // Store client connection
-  res.write(`data: ${JSON.stringify({ timestamp: formatDate(new Date()), message: "Connected to log stream", level: "info" })}\n\n`);
-
-  // Handle client disconnect
-  req.on("close", () => {
-    clients.splice(clients.indexOf(res), 1);
-    console.log("Client disconnected. Total clients:", clients.length);
-    res.end();
-  });
-};
-
-
-
-// Function to send logs to all connected clients
-const sendLog = (message, level = "info") => {
-  const logEntry = JSON.stringify({
-    timestamp: formatDate(new Date()),
-    message,
-    level,
-  });
-
-  clients.forEach((client) => {
-    client.write(`data: ${logEntry}\n\n`);
-  });
-};
 
 
 
