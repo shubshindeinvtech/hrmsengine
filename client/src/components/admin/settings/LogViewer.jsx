@@ -7,7 +7,8 @@ export default function LogViewer() {
 
   useEffect(() => {
     const eventSource = new EventSource(
-      "https://hrmsapi.invezzatech.com/api/admin/logs"
+      `${ApiendPonits.baseUrl}${ApiendPonits.endpoints.logs}`
+      // "https://hrmsapi.invezzatech.com/api/admin/logs"
     );
 
     eventSource.onmessage = (event) => {

@@ -33,7 +33,7 @@ const sendMail = async (email, subject, content) => {
         console.log(error);
       }
       console.log(formatDate(new Date()), "mail has been sent to", info.envelope.to); //messageId
-      sendLog(`${formatDate(new Date())}, "mail has been sent to", ${info.envelope.to}`); //messageId
+      sendLog(`${formatDate(new Date())}, mail has been sent to, ${info.envelope.to}`); //messageId
 
     });
   } catch (error) {
