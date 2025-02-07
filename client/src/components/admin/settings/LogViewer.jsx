@@ -6,7 +6,9 @@ export default function LogViewer() {
   const logContainerRef = useRef(null);
 
   useEffect(() => {
-    const eventSource = new EventSource("http://localhost:4000/api/admin/logs");
+    const eventSource = new EventSource(
+      "https://hrmsapi.invezzatech.com/api/admin/logs"
+    );
 
     eventSource.onmessage = (event) => {
       const logEntry = parseLog(event.data);
