@@ -385,6 +385,23 @@ const getAllSettings = async (req, res) => {
 
 const clients = [];
 
+const formatDate = (date) => {
+  const options = {
+    timeZone: 'Asia/Kolkata', // Force IST
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  };
+
+  const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(date);
+
+  // Convert format from DD/MM/YYYY, hh:mm AM/PM → DD-MM-YYYY hh:mmAM/PM
+  return formattedDate.replace(/\//g, '-').replace(/\s/g, '');
+};
+
 const log = async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache, no-transform");
@@ -396,7 +413,7 @@ const log = async (req, res) => {
   res.flushHeaders(); // Ensure headers are sent immediately
 
   clients.push(res); // Store client connection
-  res.write(`data: ${JSON.stringify({ timestamp: new Date().toLocaleTimeString(), message: "Connected to log stream", level: "info" })}\n\n`);
+  res.write(`data: ${JSON.stringify({ timestamp: formatDate(new Date()), message: "Connected to log stream", level: "info" })}\n\n`);
 
   // Handle client disconnect
   req.on("close", () => {
@@ -406,24 +423,6 @@ const log = async (req, res) => {
   });
 };
 
-const formatDate = (date) => {
-  const istDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
-
-  const options = {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  };
-
-  const formattedDate = new Intl.DateTimeFormat("en-IN", options).format(istDate);
-
-  // Convert DD/MM/YYYY, hh:mm:ss AM/PM → DD-MM-YYYY hh:mm:ssAM/PM
-  return formattedDate.replace(/\//g, "-").replace(/\s/g, "");
-};
 
 
 // Function to send logs to all connected clients

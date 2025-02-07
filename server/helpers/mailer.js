@@ -44,7 +44,7 @@ const sendMail = async (email, subject, content) => {
         sendLog(`Email sending failed: ${error.message}`, "error");
       }
       console.log(formatDate(new Date()), "mail has been sent to", info.envelope.to); //messageId
-      sendLog(` mail has been sent to, ${info.envelope.to}`, "error"); //messageId
+      sendLog(` mail has been sent to, ${info.envelope.to}`, "info"); //messageId
 
     });
   } catch (error) {
