@@ -2,6 +2,8 @@ const LeaveApplication = require("../model/leaveApplicationModel");
 const LeaveBalance = require("../model/leaveBalanceModel");
 const Employeeprofile = require("../model/employeeProfile");
 const { validationResult } = require("express-validator");
+const { sendLog } = require('../controllers/admin/settingController');
+
 
 const getLeaveDetails = async (req, res) => {
   try {
@@ -232,6 +234,7 @@ const applyLeave = async (req, res) => {
         startDate.setDate(startDate.getDate() + 1);
       }
     }
+    sendLog(`leave application from ${employee_id} for ${totaldays}`, "info")
 
     return res.status(200).json({
       message: "Leave application submitted successfully",

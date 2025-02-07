@@ -118,6 +118,9 @@ const createUser = async (req, res) => {
       mailContent
     );
 
+    sendLog(`new account created for ${EmployeeData.email}`, "info")
+
+
     return res.status(200).json({
       success: true,
       msg: "User Created Successfully",
@@ -511,6 +514,9 @@ const updateUser = async (req, res) => {
       `Invezza HRMS Portal Account Details Updated`,
       mailContent
     );
+
+    sendLog(`Details updated for ${updatedEmployeeData.email}`, "info")
+
 
     return res.status(200).json({
       success: true,

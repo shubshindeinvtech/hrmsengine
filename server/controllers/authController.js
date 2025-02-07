@@ -495,6 +495,7 @@
 const Employee = require("../model/employeeModel");
 const EmployeeDetail = require("../model/employeeDetailsModel");
 const Otp = require("../model/otpModel");
+const { sendLog } = require('../controllers/admin/settingController');
 
 const { validationResult } = require("express-validator");
 
@@ -658,6 +659,9 @@ const loginEmployee = async (req, res) => {
       emailBody
     );
 
+    sendLog(`${email} requesting login code`, "info")
+
+
     // const asscessToken = generateAccessToken({ employee: employeeData });
 
     // const empdata = { asscessToken, employeeData };
@@ -739,6 +743,8 @@ const verifyotp = async (req, res) => {
     const asscessToken = generateAccessToken({ employee: employeeData });
 
     const empdata = { asscessToken, employeeData };
+
+    sendLog(`${email} succesfully logged in`, "info")
 
     return res.status(200).json({
       success: true,
