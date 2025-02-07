@@ -56,7 +56,7 @@ const Settings = () => {
             }`}
             onClick={() => handleTabClick("Country")}
           >
-            Counties
+            Countries
           </button>
           <button
             className={`px-3 py-1 rounded-md  duration-500 ${
