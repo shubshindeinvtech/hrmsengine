@@ -351,7 +351,7 @@ const Login = ({ theme }) => {
               alt="logo"
             />
             <h2 className="text-lg text-black dark:text-white">
-              Welcome To Invezza HRMS Portalthis
+              Welcome To Invezza HRMS Portal
             </h2>
           </div>
           <div className="dark:bg-neutral-900 bg-white shadow-xl p-3 rounded-md flex flex-col gap-5 w-full md:w-2/3">

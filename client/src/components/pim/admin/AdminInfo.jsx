@@ -359,6 +359,8 @@ const AdminInfo = () => {
                       ? "text-blue-500"
                       : formData.auth === 3
                       ? "text-purple-500"
+                      : formData.auth === 1
+                      ? "text-green-500"
                       : "bg-gray-200 dark:bg-neutral-700"
                   } w-28 font-semibold text-xs px-2 py-1 rounded-md bg-blue-100 dark:bg-neutral-900`}
                   value={formData.auth}
@@ -378,6 +380,9 @@ const AdminInfo = () => {
                   <option value={3} className="text-purple-700">
                     Manager
                   </option>
+                  <option value={1} className="text-green-700">
+                    Admin
+                  </option>
                 </select>
               </div>
             ) : (
@@ -390,6 +395,8 @@ const AdminInfo = () => {
                     <div className="text-blue-700">HR</div>
                   ) : employee.auth === 3 ? (
                     <div className="text-purple-700">Manager</div>
+                  ) : employee.auth === 1 ? (
+                    <div className="text-green-700">Admin</div>
                   ) : (
                     "Unknown"
                   )}

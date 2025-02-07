@@ -383,6 +383,26 @@ const getAllSettings = async (req, res) => {
   }
 };
 
+const clients = [];
+
+const log = async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  clients.push(res); // Store connection
+
+  req.on('close', () => {
+    clients.splice(clients.indexOf(res), 1); // Remove on disconnect
+    res.end();
+  });
+};
+
+// Function to send logs to all connected clients
+const sendLog = (message) => {
+  clients.forEach(client => client.write(`data: ${message}\n\n`));
+};
+
 
 
 
@@ -401,5 +421,7 @@ module.exports = {
   getDesignations,
   addDesignation,
   deleteDesignation,
-  getAllSettings
+  getAllSettings,
+  log,
+  sendLog
 };

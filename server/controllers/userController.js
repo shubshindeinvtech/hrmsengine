@@ -278,9 +278,9 @@ const viewUser = async (req, res) => {
       // _id: {
       //   $ne: req.employee._id,
       // },
-      auth: {
-        $nin: [1],
-      },
+      // auth: {
+      //   $nin: [1],
+      // },
     });
 
     // Map through employees to add their profile URL

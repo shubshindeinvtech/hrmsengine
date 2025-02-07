@@ -62,6 +62,7 @@
         "getreportingto": "api/admin/getreportingto",
         "addreportingto": "api/admin/addreportingto",
         "deletereportingto": "api/admin/deletereportingto",
-        "getallsettings": "api/admin/getallsettings"
+        "getallsettings": "api/admin/getallsettings",
+        "logs": "api/admin/logs"
     }
 }

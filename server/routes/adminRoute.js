@@ -364,4 +364,11 @@ router.get(
   settingController.getAllSettings
 )
 
+router.get(
+  "/logs",
+  // auth,
+  // onlyAdminAccess,
+  settingController.log
+)
+
 module.exports = router;
