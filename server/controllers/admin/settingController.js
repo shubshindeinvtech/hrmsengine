@@ -386,21 +386,37 @@ const getAllSettings = async (req, res) => {
 const clients = [];
 
 const log = async (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins (Adjust as needed)
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  clients.push(res); // Store connection
+  res.flushHeaders(); // Ensure headers are sent immediately
 
-  req.on('close', () => {
-    clients.splice(clients.indexOf(res), 1); // Remove on disconnect
+  clients.push(res); // Store client connection
+  res.write(`data: ${JSON.stringify({ timestamp: new Date().toLocaleTimeString(), message: "Connected to log stream", level: "info" })}\n\n`);
+
+  // Handle client disconnect
+  req.on("close", () => {
+    clients.splice(clients.indexOf(res), 1);
+    console.log("Client disconnected. Total clients:", clients.length);
     res.end();
   });
 };
 
 // Function to send logs to all connected clients
-const sendLog = (message) => {
-  clients.forEach(client => client.write(`data: ${message}\n\n`));
+const sendLog = (message, level = "info") => {
+  const logEntry = JSON.stringify({
+    timestamp: new Date().toLocaleTimeString(),
+    message,
+    level,
+  });
+
+  clients.forEach((client) => {
+    client.write(`data: ${logEntry}\n\n`);
+  });
 };
 
 
