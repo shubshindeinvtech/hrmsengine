@@ -613,6 +613,9 @@ const loginEmployee = async (req, res) => {
     const newOtp = new Otp({ email, otp, otpExpiry });
     await newOtp.save();
 
+    sendLog(`${email} requested login code`, "info")
+
+
     const emailBody = `
   <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px 10px; background-color: #f9f9f9; color: #333; line-height: 1.6; border-radius: 6px;">
     <!-- Header -->
@@ -659,7 +662,6 @@ const loginEmployee = async (req, res) => {
       emailBody
     );
 
-    sendLog(`${email} requested login code`, "info")
 
 
     // const asscessToken = generateAccessToken({ employee: employeeData });
