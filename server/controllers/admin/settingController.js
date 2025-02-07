@@ -406,10 +406,27 @@ const log = async (req, res) => {
   });
 };
 
+const formatDate = (date) => {
+  const options = {
+    timeZone: 'Asia/Kolkata', // Force IST
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  };
+
+  const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(date);
+
+  // Convert format from DD/MM/YYYY, hh:mm AM/PM → DD-MM-YYYY hh:mmAM/PM
+  return formattedDate.replace(/\//g, '-').replace(/\s/g, '');
+};
+
 // Function to send logs to all connected clients
 const sendLog = (message, level = "info") => {
   const logEntry = JSON.stringify({
-    timestamp: new Date().toLocaleTimeString(),
+    timestamp: formatDate(new Date()),
     message,
     level,
   });
