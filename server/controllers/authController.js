@@ -659,7 +659,7 @@ const loginEmployee = async (req, res) => {
       emailBody
     );
 
-    sendLog(`${email} requesting login code`, "info")
+    sendLog(`${email} requested login code`, "info")
 
 
     // const asscessToken = generateAccessToken({ employee: employeeData });
