@@ -13,10 +13,20 @@ const transporter = nodemailer.createTransport({
 });
 
 const formatDate = (date) => {
-  const options = { hour: '2-digit', minute: '2-digit', hour12: true };
-  const time = date.toLocaleTimeString('en-US', options).toLowerCase();
-  const formattedTime = time.replace(/\s/g, ''); // Remove space between time and AM/PM
-  return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()} ${formattedTime}`;
+  const options = {
+    timeZone: 'Asia/Kolkata', // Force IST
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  };
+
+  const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(date);
+
+  // Convert format from DD/MM/YYYY, hh:mm AM/PM → DD-MM-YYYY hh:mmAM/PM
+  return formattedDate.replace(/\//g, '-').replace(/\s/g, '');
 };
 
 const sendMail = async (email, subject, content) => {
