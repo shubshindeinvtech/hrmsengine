@@ -407,21 +407,24 @@ const log = async (req, res) => {
 };
 
 const formatDate = (date) => {
+  const istDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+
   const options = {
-    timeZone: 'Asia/Kolkata', // Force IST
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: true,
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
   };
 
-  const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(date);
+  const formattedDate = new Intl.DateTimeFormat("en-IN", options).format(istDate);
 
-  // Convert format from DD/MM/YYYY, hh:mm AM/PM → DD-MM-YYYY hh:mmAM/PM
-  return formattedDate.replace(/\//g, '-').replace(/\s/g, '');
+  // Convert DD/MM/YYYY, hh:mm:ss AM/PM → DD-MM-YYYY hh:mm:ssAM/PM
+  return formattedDate.replace(/\//g, "-").replace(/\s/g, "");
 };
+
 
 // Function to send logs to all connected clients
 const sendLog = (message, level = "info") => {
