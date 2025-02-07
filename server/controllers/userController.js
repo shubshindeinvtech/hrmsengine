@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Employee = require("../model/employeeModel");
 const EmployeeProfile = require("../model/employeeProfile");
+const { sendLog } = require('../controllers/admin/settingController');
 
 const Upload = require("../helpers/upload");
 const Employeeprofile = require("../model/employeeProfile");
@@ -29,6 +30,7 @@ const createUser = async (req, res) => {
     const isExist = await Employee.findOne({ email });
 
     if (isExist) {
+      sendLog(`${email} this email is already exist`, "error")
       return res.status(400).json({
         success: false,
         msg: "Email is Already Exist",
