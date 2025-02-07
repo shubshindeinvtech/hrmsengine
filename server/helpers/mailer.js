@@ -40,10 +40,11 @@ const sendMail = async (email, subject, content) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
+        console.error("Email sending failed:", error);
+        sendLog(`Email sending failed: ${error.message}`, "error");
       }
       console.log(formatDate(new Date()), "mail has been sent to", info.envelope.to); //messageId
-      sendLog(`${formatDate(new Date())}, mail has been sent to, ${info.envelope.to}`); //messageId
+      sendLog(` mail has been sent to, ${info.envelope.to}`, "info"); //messageId
 
     });
   } catch (error) {

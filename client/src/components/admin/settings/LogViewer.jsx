@@ -73,7 +73,7 @@ export default function LogViewer() {
             logs.map((log, index) => (
               <div
                 key={index}
-                className={`py-1 px-2 border-b border-gray-700 ${getLogStyle(
+                className={`py-1 px-2 border- border-gray-700 ${getLogStyle(
                   log.level
                 )}`}
               >
