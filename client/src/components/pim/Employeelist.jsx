@@ -386,8 +386,9 @@ const Employeelist = () => {
                   <div className="col-span-1 font-semibold">E_ID</div>
                   <div className="col-span-3 font-semibold">Employee Name</div>
                   <div className="col-span-2 font-semibold">Designation</div>
+                  <div className="col-span-1 font-semibold">Role</div>
                   <div className="col-span-2 font-semibold">Joining Date</div>
-                  <div className="col-span-2 font-semibold">Status</div>
+                  <div className="col-span-1 font-semibold">Status</div>
                   <div className="col-span-2 font-semibold xl:ml-4">Action</div>
                 </div>
               </motion.div>
@@ -438,10 +439,25 @@ const Employeelist = () => {
                         <div>{employee.name}</div>
                       </button>
                     </div>
-                    <div className="col-span-2">{employee.designation}</div>
+                    <div className="col-span-2 flex items-center gap-1">
+                      {employee.designation}
+                    </div>
+                    <div className="col-span-1 flex items-center gap-1">
+                      <div className="text-xs">
+                        {employee.auth === 0 ? (
+                          <div className="text-orange-700">Employee</div>
+                        ) : employee.auth === 2 ? (
+                          <div className="text-blue-700">HR</div>
+                        ) : employee.auth === 3 ? (
+                          <div className="text-purple-700">Manager</div>
+                        ) : (
+                          <div className="text-green-700">Admin</div>
+                        )}
+                      </div>
+                    </div>
                     <div className="col-span-2">{employee.dateofjoining}</div>
                     <div
-                      className={`col-span-2 p-1 text-center rounded-md w-fit h-fit text-xs ${
+                      className={`col-span-1 p-1 text-center rounded-md w-fit h-fit text-xs ${
                         employee.status === 1
                           ? "bg-green-500/20 text-green-500"
                           : "bg-red-500/20 text-red-500"
@@ -449,11 +465,13 @@ const Employeelist = () => {
                     >
                       {employee.status === 1 ? (
                         <span className="flex items-center text-green-500">
-                          <TiFlash fontSize={18} /> Active
+                          <TiFlash fontSize={18} />
+                          <span className=" group-hover:flex">Active</span>
                         </span>
                       ) : (
                         <span className="flex items-center gap-0.5 text-red-500">
-                          <IoFlashOff fontSize={15} /> Inactive
+                          <IoFlashOff fontSize={15} />
+                          <span className=" group-hover:flex">Inactive</span>
                         </span>
                       )}
                     </div>
@@ -580,6 +598,20 @@ const Employeelist = () => {
                   <div className="text-sm text-gray-700 dark:text-gray-300 flex gap-1 justify-between">
                     <div>Joining Date</div>
                     <div>{employee.dateofjoining}</div>
+                  </div>
+                  <div className="text-sm text-gray-700 dark:text-gray-300 flex gap-1 justify-between">
+                    <div>Role</div>
+                    <div className="">
+                      {employee.auth === 0 ? (
+                        <div className="text-orange-700">Employee</div>
+                      ) : employee.auth === 2 ? (
+                        <div className="text-blue-700">HR</div>
+                      ) : employee.auth === 3 ? (
+                        <div className="text-purple-700">Manager</div>
+                      ) : (
+                        <div className="text-green-700">Admin</div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="text-sm text-gray-700 dark:text-gray-300 mt-2 flex items-center gap-2 justify-between">
