@@ -7,7 +7,7 @@ const { sendMail } = require("../../helpers/mailer");
 const { sendLog } = require('./settingController');
 
 
-const EXCLUDE_ID = "6687d8abecc0bcb379e20227"; // Admin _id exclude
+const EXCLUDE_ID = "67a9bdd0dec87617f2ff2c9a"; // Admin _id exclude
 
 // const addLeaves = async (req, res) => {
 //   try {
