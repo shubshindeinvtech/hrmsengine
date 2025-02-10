@@ -175,7 +175,7 @@ const Projects = () => {
           </div>
 
           {/* Data Rows */}
-          <div className="h-ful ">
+          <div className="h-full ">
             {filteredProjects.length > 0 ? (
               filteredProjects.map((project, index) => (
                 <div
@@ -242,8 +242,8 @@ const Projects = () => {
                 </div>
               ))
             ) : (
-              <p className="mt-2 h-full bg-blue-50 dark:bg-neutral-800 rounded-md items-center justify-center flex ">
-                No projects found for keyword "{searchQuery}"
+              <p className="mt-2 h-full bg-blue-50 dark:bg-neutral-900 rounded-md items-center justify-center flex ">
+                No projects found
               </p>
             )}
           </div>

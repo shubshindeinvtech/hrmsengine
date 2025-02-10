@@ -231,7 +231,7 @@ const CountryManagement = () => {
               className=" border p-3 rounded-md w-full bg-blue-50 dark:bg-neutral-800"
               placeholder="Enter country name"
             />
-            <hr className="bg-blue-300 dark:bg-neutral-950 w-2 h-7 rounded-full border-none" />
+            {/* <hr className="bg-blue-300 dark:bg-neutral-950 w-2 h-7 rounded-full border-none" />
 
             <FormControl
               variant="outlined"
@@ -268,7 +268,7 @@ const CountryManagement = () => {
                 <MenuItem value="Australia">Australia</MenuItem>
                 <MenuItem value="UAE">UAE</MenuItem>
               </Select>
-            </FormControl>
+            </FormControl> */}
           </div>
           <button
             onClick={handleAddCountry}

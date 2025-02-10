@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import MenuTabs from "./Menutabs";
 import { motion } from "framer-motion";
@@ -14,8 +14,10 @@ import Loading from "../Loading";
 import { MdDelete } from "react-icons/md";
 import userprofile from "../../assets/images/clientAvatar.png";
 import teamsIcon from "../../assets/images/Teams.png";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Employeelist = () => {
+  const { userData } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchemployee, setFetchEmployee] = useState([]);
@@ -227,6 +229,8 @@ const Employeelist = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [showPopup]); // Re-run the effect only when showPopup changes
+
+  console.log(userData.employeeData.empid);
 
   return (
     <div className="dark:text-white pb-32 h-full">
@@ -494,15 +498,19 @@ const Employeelist = () => {
                         placement="top"
                         arrow
                       >
-                        <button
-                          type="button" // Ensure this button doesn't trigger form submission
-                          onClick={() =>
-                            handleDeleteClick(employee._id, employee.name)
-                          } // Pass employee._id
-                          className="hover:bg-red-500/20 p-1.5 rounded-md text-red-500 "
-                        >
-                          <MdDelete fontSize={17} />
-                        </button>
+                        {employee.empid === userData.employeeData.empid ? (
+                          ""
+                        ) : (
+                          <button
+                            type="button" // Ensure this button doesn't trigger form submission
+                            onClick={() =>
+                              handleDeleteClick(employee._id, employee.name)
+                            } // Pass employee._id
+                            className="hover:bg-red-500/20 p-1.5 rounded-md text-red-500 "
+                          >
+                            <MdDelete fontSize={17} />
+                          </button>
+                        )}
                       </Tooltip>
                       <a
                         href={`MSTeams:/l/chat/0/0?users=${employee.email}`}
