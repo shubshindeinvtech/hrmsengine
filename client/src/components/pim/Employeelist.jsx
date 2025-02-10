@@ -498,7 +498,7 @@ const Employeelist = () => {
                         placement="top"
                         arrow
                       >
-                        {employee.empid === userData.employeeData.empid ? (
+                        {employee.empid == userData.employeeData.empid ? (
                           ""
                         ) : (
                           <button
