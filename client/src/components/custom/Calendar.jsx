@@ -179,11 +179,11 @@ const Calendar = ({ onDateChange }) => {
       </div>
 
       {showCalendar && (
-        <div className="absolute -ml-5 md:ml-0 z-10 mt-2 p-4 border border-gray-300 rounded-md bg-sky-100 dark:bg-neutral-900 dark:border-neutral-700 shadow-lg">
+        <div className="absolute bottom-14 -ml-5 md:ml-0 z-10 mt-2 p-4 border border-gray-300 rounded-md bg-sky-100 dark:bg-neutral-900 dark:border-neutral-700 shadow-lg">
           <div className="flex items-center justify-between mb-4 gap-2">
             <button
               onClick={() => handleMonthChange(-1)}
-              className="p-2 bg-sky-50 rounded-md dark:bg-neutral-800 dark:border-neutral-700 mt-1 group"
+              className="p-2 bg-sky-50 rounded-md dark:bg-neutral-800 dark:border-neutral-700 mt- group"
             >
               <FaCaretLeft
                 fontSize={23}
@@ -191,7 +191,11 @@ const Calendar = ({ onDateChange }) => {
               />
             </button>
             <div className="flex gap-2">
-              <FormControl
+              <div className="text-lg font-bold w-48 p-2 border rounded-md bg-sky-50 dark:bg-neutral-800 dark:border-neutral-700 h-10 flex gap-2 items-center justify-center">
+                <span>{months[currentMonth]} </span>
+                <span>{currentYear}</span>
+              </div>
+              {/* <FormControl
                 variant="outlined"
                 margin="dense"
                 className={classNames(
@@ -236,11 +240,11 @@ const Calendar = ({ onDateChange }) => {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
             </div>
             <button
               onClick={() => handleMonthChange(1)}
-              className="p-2 bg-sky-50 rounded-md dark:bg-neutral-800 dark:border-neutral-700 mt-1 group"
+              className="p-2 bg-sky-50 rounded-md dark:bg-neutral-800 dark:border-neutral-700 mt- group"
             >
               <FaCaretRight
                 fontSize={23}
@@ -248,9 +252,12 @@ const Calendar = ({ onDateChange }) => {
               />
             </button>
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center">
+          <div className="grid grid-cols-7 gap-1 text-center  max-h-52 overflow-y-scroll scrollbrhdn">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div key={day} className="font-semibold">
+              <div
+                key={day}
+                className="font-semibold sticky top-0  dark:bg-neutral-900 bg-sky-100"
+              >
                 {day}
               </div>
             ))}

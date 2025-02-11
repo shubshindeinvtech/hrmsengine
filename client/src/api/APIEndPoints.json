@@ -19,6 +19,7 @@
         "gettimesheetlimit": "api/admin/gettimesheetlimit",
         "updatetimesheetlimit": "api/admin/updatetimesheetlimit",
         "addholidays": "api/admin/addholidays",
+        "deleteHoliday": "api/admin/deleteholidays",
         "viewholidays": "api/admin/viewholidays",
         "viewleaverecords": "api/viewleaverecords",
         "getoptionalholidaylist": "api/getoptionalholidaylist",

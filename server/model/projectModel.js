@@ -31,10 +31,12 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    assignto: {
-      type: mongoose.Schema.Types.ObjectId, //employee model object reference to realtion
-      ref: "Employee",
-    },
+    assignto: [
+      {
+        type: mongoose.Schema.Types.ObjectId, //employee model object reference to realtion
+        ref: "Employee",
+      }
+    ],
   },
   {
     timestamps: true,

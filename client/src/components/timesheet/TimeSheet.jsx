@@ -340,11 +340,16 @@ export default function TimeSheet({ record, index }) {
           }
         );
         const data = await response.json();
+
         if (data.success) {
           const activeProjects = (data.data || []).filter(
             (project) => !project.isdeleted
           );
-          setProjects(activeProjects); // Store project data
+          const assignedProjects = activeProjects.filter((project) =>
+            project.assignto.includes(employee_id)
+          );
+
+          setProjects(assignedProjects); // Store project data
           setError(null);
           // Log each project's name and _id
           data.data.forEach((project) => {

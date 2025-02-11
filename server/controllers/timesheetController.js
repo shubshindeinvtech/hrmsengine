@@ -30,6 +30,17 @@ const fillTimesheet = async (req, res) => {
     const employee = await Employee.findOne({ _id: employee_id });
     const projectdetails = await Project.findOne({ _id: project });
 
+
+    // Check if employee is assigned (assignto contains objects, so we extract _id values)
+    const isAssigned = projectdetails.assignto.some(assign => assign._id.toString() === employee_id);
+
+    if (!isAssigned) {
+      return res.status(400).json({
+        success: false,
+        msg: "You're not assigned to this project.",
+      });
+    }
+
     if (!employee) {
       return res.status(400).json({
         success: false,

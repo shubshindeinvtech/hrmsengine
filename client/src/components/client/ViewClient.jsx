@@ -25,6 +25,8 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Textarea } from "@chakra-ui/react";
 import { FaLinkedin } from "react-icons/fa";
+import teamsIcon from "../../assets/images/Teams.png";
+import AssignToSelect from "./AssignToSelect";
 
 const GlobalStyles = createGlobalStyle`
 .MuiPaper-root{
@@ -109,6 +111,7 @@ const useStyles = makeStyles({
 const ViewClient = () => {
   const navigate = useNavigate(); // Initialize navigate
 
+  const [hoveredId, setHoveredId] = useState(null);
   const classes = useStyles();
   const location = useLocation();
   const { client, noofactiveprojects } = location.state || {}; // Destructure client safely
@@ -128,7 +131,7 @@ const ViewClient = () => {
 
   const [projectForm, setProjectForm] = useState({
     projectname: "",
-    assignto: "",
+    assignto: [],
     description: "", // default assignee
   });
   const [activeEmployees, setActiveEmployees] = useState([]);
@@ -434,6 +437,12 @@ const ViewClient = () => {
     // console.log(clientData._id);
   };
 
+  const handleViewClick = (employeeId) => {
+    navigate(`/pim/employee-details/${employeeId}`, {
+      state: { activeTab: "Info" }, // Pass "Leave" as the default active tab
+    });
+  };
+
   return (
     <div className="h-full pb-20">
       <div className="bg-white dark:bg-neutral-950 p-2 rounded-md flex flex-col gap-2 text-black dark:text-white h-full min-h-full">
@@ -621,19 +630,59 @@ const ViewClient = () => {
                 </div>
                 <div className="flex flex-col gap-1 w-full">
                   <strong>Assigned To</strong>
-                  <div className="flex items-center gap-2 ">
-                    <img
-                      src={
-                        project.assignto?.profile
-                          ? project.assignto?.profile
-                          : userprofile
-                      }
-                      alt={`${project.assignto?.name}'s profile`}
-                      className="w-6 h-6 rounded-lg object-cover"
-                    />
-                    {project.assignto ? project.assignto.name : "Unassigned"}
+                  <div className="flex flex-wrap items-center gap-0">
+                    {project.assignto && project.assignto.length > 0 ? (
+                      <>
+                        {project.assignto.slice(0, 3).map((employee) => (
+                          <div
+                            key={employee._id}
+                            className="relative -ml-2"
+                            onMouseEnter={() => setHoveredId(employee._id)}
+                            onMouseLeave={() => setHoveredId(null)}
+                            onClick={() => handleViewClick(employee._id)}
+                          >
+                            <img
+                              src={employee.profile || userprofile}
+                              alt={employee.name}
+                              className="w-8 h-8 rounded-full object-cover cursor-pointer transition-transform duration-200 hover:scale-110"
+                            />
+                          </div>
+                        ))}
+
+                        {project.assignto.length > 3 && (
+                          <div className="relative">
+                            {/* +N Badge with Hoverable Tooltip */}
+                            <div className="w-8 h-8 flex items-center justify-center bg-gray-300 dark:bg-neutral-700 text-sm font-medium rounded-full cursor-pointer group/profile">
+                              +{project.assignto.length - 3}
+                              {/* Tooltip on Hover */}
+                              <ul className="absolute hidden group-hover/profile:flex left-1/2 scrollbrhdn max-h-40 translate-y-1/2 bottom-full mb-2  overflow-y-auto w-52 flex-col gap-1 bg-white dark:bg-neutral-800  p-2 rounded-md shadow-lg z-50">
+                                {project.assignto.map((employee) => (
+                                  <li
+                                    key={employee._id}
+                                    className="flex items-center gap-2 p-1 hover:bg-blue-100 dark:hover:bg-neutral-600 rounded cursor-pointer"
+                                    onClick={() =>
+                                      handleViewClick(employee._id)
+                                    }
+                                  >
+                                    <img
+                                      src={employee.profile || userprofile}
+                                      alt={employee.name}
+                                      className="w-8 h-8 rounded-xl object-cover transition-transform duration-200 hover:scale-110"
+                                    />
+                                    {employee.name}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <span>Unassigned</span>
+                    )}
                   </div>
                 </div>
+
                 <div className="flex flex-col gap-1 w-1/2">
                   <strong>Start Date</strong>
                   {new Date(project.createdAt).toLocaleDateString()}
@@ -885,7 +934,8 @@ const ViewClient = () => {
                 {1000 - projectForm.description.length}/1000
               </div>
             </div>
-            <FormControl
+
+            {/* <FormControl
               variant="outlined"
               className={classNames(
                 "col-span-12 sm:col-span-6 xl:col-span-2 text-xs",
@@ -900,8 +950,23 @@ const ViewClient = () => {
                 id="assignto"
                 label="Assign To"
                 name="assignto"
-                value={projectForm.assignto}
-                onChange={handleProjectInputChange}
+                multiple // Enable multiple selection
+                value={projectForm.assignto || []} // Ensure it's an array
+                onChange={(event) =>
+                  setProjectForm({
+                    ...projectForm,
+                    assignto: event.target.value,
+                  })
+                } // Update state with selected values
+                renderValue={(selected) =>
+                  selected
+                    .map(
+                      (id) =>
+                        activeEmployees.find((employee) => employee._id === id)
+                          ?.name || "Unknown"
+                    )
+                    .join(", ")
+                } // Display selected names
                 IconComponent={(props) => (
                   <ArrowDropDownRoundedIcon
                     {...props}
@@ -926,7 +991,14 @@ const ViewClient = () => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
+
+            <AssignToSelect
+              activeEmployees={activeEmployees}
+              projectForm={projectForm}
+              setProjectForm={setProjectForm}
+            />
+
             <div className="mt- flex w-full gap-2">
               <div
                 className="w-full bg-blue-500/20 text-center text-base hover:bg-blue-600/20 font-bold text-blue-500  p-3 rounded-md cursor-pointer"

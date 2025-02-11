@@ -19,6 +19,8 @@ import Tooltip from "@mui/material/Tooltip";
 import { BsEmojiHeartEyesFill } from "react-icons/bs";
 import { MdFestival } from "react-icons/md";
 import Loading from "../../Loading";
+import { MdDelete } from "react-icons/md";
+import { FaCircleCheck } from "react-icons/fa6";
 
 const GlobalStyles = createGlobalStyle`
 .MuiPaper-root{
@@ -110,6 +112,7 @@ const RefillLeaves = () => {
   const [weekendHoliday, setWeekendHoliday] = useState([]);
   const [holidayData, setHolidayData] = useState(null);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("accessToken");
   const employee_id = userData.employeeData._id;
@@ -165,8 +168,11 @@ const RefillLeaves = () => {
           },
         }
       );
-      alert("Holidays added successfully.");
-      location.reload();
+      setMessage("Holidays added successfully.");
+      setTimeout(() => {
+        setMessage(false);
+        location.reload();
+      }, 2000);
     } catch (error) {
       setError("Error adding holidays. Please try again.");
       //   console.error(error);
@@ -276,6 +282,54 @@ const RefillLeaves = () => {
   // Sort holidays by date
   combinedHolidays.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+  const handleDeleteHoliday = async (holidayName) => {
+    if (!holidayName) return;
+    console.log("Deleting holiday:", holidayName);
+
+    try {
+      const response = await fetch(
+        `${ApiendPonits.baseUrl}${ApiendPonits.endpoints.deleteHoliday}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name: holidayName }), // Send 'name' instead of '_id'
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage("Holiday Delete Successfully");
+        setTimeout(() => {
+          setMessage(false);
+        }, 4000);
+        setHolidayData((prev) => ({
+          ...prev,
+          mandatoryholiday: prev.mandatoryholiday.filter(
+            (h) => h.name !== holidayName
+          ),
+          // optionalholiday: {
+          //   ...prev.optionalholiday,
+          //   optionalholidaylist:
+          //     prev.optionalholiday.optionalholidaylist.filter(
+          //       (h) => h.name !== holidayName
+          //     ),
+          // },
+          weekendHoliday: prev.weekendHoliday.filter(
+            (h) => h.name !== holidayName
+          ),
+        }));
+      } else {
+        console.warn("Failed to delete holiday:", data.msg);
+      }
+    } catch (error) {
+      console.error("Error deleting holiday:", error);
+    }
+  };
+
   return (
     <div>
       <div className="z-10 sticky top-0">
@@ -375,7 +429,6 @@ const RefillLeaves = () => {
             </h2>
           </motion.div>
         </div>
-
         {!showAddHolidays && (
           <div>
             {holidayData && (
@@ -399,20 +452,30 @@ const RefillLeaves = () => {
                         <FaCaretRight fontSize={20} />
                       </div>
                     </div>
-                    <button
+                    {/* <button
                       className="text-blue-500 rounded-md hover:bg-blue-500/15 hover:font-bold hover:px-2.5 py-1 duration-300"
                       onClick={() => setShowAddHolidays(true)}
                     >
                       Add holidays for {year + 1}
-                    </button>
+                    </button> */}
+                    <div
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSubmit}
+                      className="bg-blue-500/15 hover:bg-blue-500/30 p-1.5 rounded-md text-blue-500 duration-500 flex items-center gap-1 hover:font-bold cursor-default"
+                    >
+                      <FaSave fontSize={20} />
+                      <span>Save</span>
+                    </div>
                   </div>
 
                   <div className="bg-sky-100 dark:bg-neutral-800 px-2 py-3 rounded-md font-bold">
                     <ul className="grid grid-cols-12">
-                      <li className="col-span-3">Holiday type</li>
+                      <li className="col-span-2">Holiday type</li>
                       <li className="col-span-3">Holiday Name</li>
                       <li className="col-span-3">Holiday Date</li>
                       <li className="col-span-3">Greeting</li>
+                      <li className="col-span-1">Action</li>
                     </ul>
                   </div>
 
@@ -430,7 +493,7 @@ const RefillLeaves = () => {
                                   className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md"
                                 >
                                   <ul className="grid grid-cols-12">
-                                    <li className="col-span-3">
+                                    <li className="col-span-2">
                                       {holiday.type}
                                     </li>
                                     <li className="col-span-3">
@@ -501,6 +564,16 @@ const RefillLeaves = () => {
                                     <li className="col-span-3">
                                       {holiday.greeting || "NA"}
                                     </li>
+                                    <li className="col-span-1 flex justify-between items-center">
+                                      <button
+                                        className="text-red-500 hover:text-red-700"
+                                        onClick={() =>
+                                          handleDeleteHoliday(holiday.name)
+                                        }
+                                      >
+                                        <MdDelete size={18} />
+                                      </button>
+                                    </li>
                                   </ul>
                                 </div>
                               ))}
@@ -511,273 +584,282 @@ const RefillLeaves = () => {
                     </div>
                   )}
                 </div>
+                <div className="w-full flex items-center justify-center">
+                  {message && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 0 }}
+                      animate={{ opacity: 1, y: 15 }}
+                      exit={{ opacity: 0, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute top-0 text-green-500 border border-green-500/10 bg-green-500/10 py-2 px-4 w-fit rounded-md text-center flex items-center gap-2"
+                    >
+                      <FaCircleCheck fontSize={20} />
+                      {message}
+                    </motion.div>
+                  )}
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {showAddHolidays && (
-          <div className="bg-white dark:bg-neutral-950 shadow-md rounded-md p- dark:text-white z-10">
-            <div className="grid grid-cols-1 gap-2">
-              <div className="flex items-center gap-2 justify-between">
-                <h2 className="text-lg font-semibold ">
-                  Holidays for {currentYear + 1}
-                </h2>
-                <div className="flex gap-2">
-                  <div
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    className="bg-blue-500/15 hover:bg-blue-500/30 p-1.5 rounded-md text-blue-500 duration-500 flex items-center gap-1 hover:font-bold cursor-default"
-                  >
-                    <FaSave fontSize={20} />
-                    <span>Save</span>
-                  </div>
-                  <div
-                    onClick={() => setShowAddHolidays(false)}
-                    className="bg-red-500/15 hover:bg-red-500/30 p-1.5 rounded-md text-red-500 duration-500 flex items-center gap-1 hover:font-bold cursor-default"
-                  >
-                    <IoClose fontSize={20} />
-                    <span>Close</span>
-                  </div>
+        {/* {showAddHolidays && ( */}
+        <div className="bg-white dark:bg-neutral-950 shadow-md rounded-md p- dark:text-white z-10">
+          <div className="grid grid-cols-1 gap-2">
+            {/* <div className="flex items-center gap-2 justify-between">
+              <h2 className="text-lg font-semibold ">
+                Holidays for {currentYear + 1}
+              </h2>
+              <div className="flex gap-2">
+                <div
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  className="bg-blue-500/15 hover:bg-blue-500/30 p-1.5 rounded-md text-blue-500 duration-500 flex items-center gap-1 hover:font-bold cursor-default"
+                >
+                  <FaSave fontSize={20} />
+                  <span>Save</span>
+                </div>
+                <div
+                  onClick={() => setShowAddHolidays(false)}
+                  className="bg-red-500/15 hover:bg-red-500/30 p-1.5 rounded-md text-red-500 duration-500 flex items-center gap-1 hover:font-bold cursor-default"
+                >
+                  <IoClose fontSize={20} />
+                  <span>Close</span>
                 </div>
               </div>
+            </div> */}
 
-              <div className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md">
-                <div className="flex gap-2 items-center justify-between">
-                  <h2 className="text-base font-semibold ">
-                    Mandatory Holidays
-                  </h2>
-                  <div
-                    onClick={() => handleAddHoliday("mandatory")}
-                    className="bg-green-500/15 rounded-md cursor-pointer w-fit p-1 text-green-600"
-                  >
-                    <IoIosAdd fontSize={25} />
-                  </div>
+            <div className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md">
+              <div className="flex gap-2 items-center justify-between">
+                <h2 className="text-base font-semibold ">Mandatory Holidays</h2>
+                <div
+                  onClick={() => handleAddHoliday("mandatory")}
+                  className="bg-green-500/15 rounded-md cursor-pointer w-fit p-1 text-green-600"
+                >
+                  <IoIosAdd fontSize={25} />
                 </div>
-                {mandatoryHoliday.map((holiday, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col lg:flex-row gap-2 items-center"
-                  >
-                    <Calendar
-                      onDateChange={(newDate) =>
-                        handleDateChange(setMandatoryHoliday, mandatoryHoliday)(
-                          newDate,
-                          index
-                        )
-                      }
-                      className="mb-2"
-                    />
-                    <TextField
-                      className={classNames(
-                        "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
-                        classes.root
-                      )}
-                      id="name"
-                      name="name"
-                      label="Holiday Name"
-                      variant="outlined"
-                      margin="dense"
-                      value={holiday.name}
-                      onChange={(e) =>
-                        handleHolidayChange(
-                          setMandatoryHoliday,
-                          mandatoryHoliday
-                        )(e, index)
-                      }
-                      autoComplete="off"
-                    />
-                    <TextField
-                      className={classNames(
-                        "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
-                        classes.root
-                      )}
-                      id="greeting"
-                      variant="outlined"
-                      margin="dense"
-                      label="Greeting"
-                      name="greeting"
-                      value={holiday.greeting}
-                      onChange={(e) =>
-                        handleHolidayChange(
-                          setMandatoryHoliday,
-                          mandatoryHoliday
-                        )(e, index)
-                      }
-                      autoComplete="off"
-                    />
-                    <div
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => handleRemoveHoliday("mandatory", index)}
-                      className="bg-red-400/15 p-2.5 mt-1 rounded-md text-red-500 cursor-pointer hover:bg-red-500/20"
-                    >
-                      <IoIosRemove fontSize={30} />
-                    </div>
-                  </div>
-                ))}
               </div>
-
-              <div className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md">
-                <div className="flex gap-2 items-center justify-between">
-                  <h2 className="text-base font-semibold ">
-                    Optional Holidays
-                  </h2>
+              {mandatoryHoliday.map((holiday, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col lg:flex-row gap-2 items-center"
+                >
+                  <Calendar
+                    onDateChange={(newDate) =>
+                      handleDateChange(setMandatoryHoliday, mandatoryHoliday)(
+                        newDate,
+                        index
+                      )
+                    }
+                  />
+                  <TextField
+                    className={classNames(
+                      "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
+                      classes.root
+                    )}
+                    id="name"
+                    name="name"
+                    label="Holiday Name"
+                    variant="outlined"
+                    margin="dense"
+                    value={holiday.name}
+                    onChange={(e) =>
+                      handleHolidayChange(
+                        setMandatoryHoliday,
+                        mandatoryHoliday
+                      )(e, index)
+                    }
+                    autoComplete="off"
+                  />
+                  <TextField
+                    className={classNames(
+                      "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
+                      classes.root
+                    )}
+                    id="greeting"
+                    variant="outlined"
+                    margin="dense"
+                    label="Greeting"
+                    name="greeting"
+                    value={holiday.greeting}
+                    onChange={(e) =>
+                      handleHolidayChange(
+                        setMandatoryHoliday,
+                        mandatoryHoliday
+                      )(e, index)
+                    }
+                    autoComplete="off"
+                  />
                   <div
-                    onClick={() => handleAddHoliday("optional")}
-                    className="bg-green-500/15 rounded-md cursor-pointer w-fit p-1 text-green-600"
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleRemoveHoliday("mandatory", index)}
+                    className="bg-red-400/15 p-2.5 mt-1 rounded-md text-red-500 cursor-pointer hover:bg-red-500/20"
                   >
-                    <IoIosAdd fontSize={25} />
+                    <IoIosRemove fontSize={30} />
                   </div>
                 </div>
-                {optionalHoliday.map((holiday, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col lg:flex-row gap-2 items-center"
-                  >
-                    <Calendar
-                      onDateChange={(newDate) =>
-                        handleDateChange(setOptionalHoliday, optionalHoliday)(
-                          newDate,
-                          index
-                        )
-                      }
-                      className="bg-red-400"
-                    />
-                    <TextField
-                      className={classNames(
-                        "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
-                        classes.root
-                      )}
-                      id="name"
-                      name="name"
-                      label="Holiday Name"
-                      variant="outlined"
-                      margin="dense"
-                      value={holiday.name}
-                      onChange={(e) =>
-                        handleHolidayChange(
-                          setOptionalHoliday,
-                          optionalHoliday
-                        )(e, index)
-                      }
-                      required
-                      autoComplete="off"
-                    />
-                    <TextField
-                      className={classNames(
-                        "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
-                        classes.root
-                      )}
-                      id="greeting"
-                      variant="outlined"
-                      margin="dense"
-                      label="Greeting"
-                      name="greeting"
-                      value={holiday.greeting}
-                      onChange={(e) =>
-                        handleHolidayChange(
-                          setOptionalHoliday,
-                          optionalHoliday
-                        )(e, index)
-                      }
-                      autoComplete="off"
-                    />
-                    <div
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => handleRemoveHoliday("optional", index)}
-                      className="bg-red-400/15 p-2.5 mt-1 rounded-md text-red-500 cursor-pointer hover:bg-red-500/20"
-                    >
-                      <IoIosRemove fontSize={30} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md">
-                <div className="flex gap-2 items-center justify-between">
-                  <h2 className="text-base font-semibold ">Weekend Holidays</h2>
-                  <div
-                    onClick={() => handleAddHoliday("weekend")}
-                    className="bg-green-500/15 rounded-md cursor-pointer w-fit p-1 text-green-600"
-                  >
-                    <IoIosAdd fontSize={25} />
-                  </div>
-                </div>
-                {weekendHoliday.map((holiday, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col lg:flex-row gap-2 items-center"
-                  >
-                    <Calendar
-                      onDateChange={(newDate) =>
-                        handleDateChange(setWeekendHoliday, weekendHoliday)(
-                          newDate,
-                          index
-                        )
-                      }
-                      className="mb-2"
-                    />
-                    <TextField
-                      className={classNames(
-                        "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
-                        classes.root
-                      )}
-                      id="name"
-                      variant="outlined"
-                      margin="dense"
-                      label="Holiday Name"
-                      name="name"
-                      value={holiday.name}
-                      onChange={(e) =>
-                        handleHolidayChange(setWeekendHoliday, weekendHoliday)(
-                          e,
-                          index
-                        )
-                      }
-                      autoComplete="off"
-                    />
-                    <TextField
-                      className={classNames(
-                        "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
-                        classes.root
-                      )}
-                      id="greeting"
-                      variant="outlined"
-                      margin="dense"
-                      label="Greeting"
-                      name="greeting"
-                      value={holiday.greeting}
-                      onChange={(e) =>
-                        handleHolidayChange(setWeekendHoliday, weekendHoliday)(
-                          e,
-                          index
-                        )
-                      }
-                      autoComplete="off"
-                    />
-                    <div
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => handleRemoveHoliday("weekend", index)}
-                      className="bg-red-400/15 p-2.5 mt-1 rounded-md text-red-500 cursor-pointer hover:bg-red-500/20"
-                    >
-                      <IoIosRemove fontSize={30} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {error && (
-                <div>
-                  <p className="text-red-500">{error}</p>
-                </div>
-              )}
+              ))}
             </div>
+
+            <div className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md">
+              <div className="flex gap-2 items-center justify-between">
+                <h2 className="text-base font-semibold ">Optional Holidays</h2>
+                <div
+                  onClick={() => handleAddHoliday("optional")}
+                  className="bg-green-500/15 rounded-md cursor-pointer w-fit p-1 text-green-600"
+                >
+                  <IoIosAdd fontSize={25} />
+                </div>
+              </div>
+              {optionalHoliday.map((holiday, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col lg:flex-row gap-2 items-center"
+                >
+                  <Calendar
+                    onDateChange={(newDate) =>
+                      handleDateChange(setOptionalHoliday, optionalHoliday)(
+                        newDate,
+                        index
+                      )
+                    }
+                    className="bg-red-400"
+                  />
+                  <TextField
+                    className={classNames(
+                      "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
+                      classes.root
+                    )}
+                    id="name"
+                    name="name"
+                    label="Holiday Name"
+                    variant="outlined"
+                    margin="dense"
+                    value={holiday.name}
+                    onChange={(e) =>
+                      handleHolidayChange(setOptionalHoliday, optionalHoliday)(
+                        e,
+                        index
+                      )
+                    }
+                    required
+                    autoComplete="off"
+                  />
+                  <TextField
+                    className={classNames(
+                      "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
+                      classes.root
+                    )}
+                    id="greeting"
+                    variant="outlined"
+                    margin="dense"
+                    label="Greeting"
+                    name="greeting"
+                    value={holiday.greeting}
+                    onChange={(e) =>
+                      handleHolidayChange(setOptionalHoliday, optionalHoliday)(
+                        e,
+                        index
+                      )
+                    }
+                    autoComplete="off"
+                  />
+                  <div
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleRemoveHoliday("optional", index)}
+                    className="bg-red-400/15 p-2.5 mt-1 rounded-md text-red-500 cursor-pointer hover:bg-red-500/20"
+                  >
+                    <IoIosRemove fontSize={30} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-sky-50 dark:bg-neutral-900 p-2 rounded-md">
+              <div className="flex gap-2 items-center justify-between">
+                <h2 className="text-base font-semibold ">Weekend Holidays</h2>
+                <div
+                  onClick={() => handleAddHoliday("weekend")}
+                  className="bg-green-500/15 rounded-md cursor-pointer w-fit p-1 text-green-600"
+                >
+                  <IoIosAdd fontSize={25} />
+                </div>
+              </div>
+              {weekendHoliday.map((holiday, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col lg:flex-row gap-2 items-center"
+                >
+                  <Calendar
+                    onDateChange={(newDate) =>
+                      handleDateChange(setWeekendHoliday, weekendHoliday)(
+                        newDate,
+                        index
+                      )
+                    }
+                    className="mb-2"
+                  />
+                  <TextField
+                    className={classNames(
+                      "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
+                      classes.root
+                    )}
+                    id="name"
+                    variant="outlined"
+                    margin="dense"
+                    label="Holiday Name"
+                    name="name"
+                    value={holiday.name}
+                    onChange={(e) =>
+                      handleHolidayChange(setWeekendHoliday, weekendHoliday)(
+                        e,
+                        index
+                      )
+                    }
+                    autoComplete="off"
+                  />
+                  <TextField
+                    className={classNames(
+                      "p-2 border rounded-lg dark:bg-neutral-800 dark:border-neutral-700",
+                      classes.root
+                    )}
+                    id="greeting"
+                    variant="outlined"
+                    margin="dense"
+                    label="Greeting"
+                    name="greeting"
+                    value={holiday.greeting}
+                    onChange={(e) =>
+                      handleHolidayChange(setWeekendHoliday, weekendHoliday)(
+                        e,
+                        index
+                      )
+                    }
+                    autoComplete="off"
+                  />
+                  <div
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleRemoveHoliday("weekend", index)}
+                    className="bg-red-400/15 p-2.5 mt-1 rounded-md text-red-500 cursor-pointer hover:bg-red-500/20"
+                  >
+                    <IoIosRemove fontSize={30} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {error && (
+              <div>
+                <p className="text-red-500">{error}</p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        {/* // )} */}
       </div>
     </div>
   );

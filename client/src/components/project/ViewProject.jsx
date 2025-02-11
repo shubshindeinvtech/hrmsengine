@@ -25,6 +25,7 @@ import { MdEditSquare, MdDelete } from "react-icons/md";
 import { IoClose, IoFlashOff } from "react-icons/io5";
 import { TiFlash } from "react-icons/ti";
 import Loading from "../Loading";
+import MultiSelectDropdown from "./MultiSelectDropdown";
 
 import {
   TbLayoutAlignLeftFilled,
@@ -123,11 +124,11 @@ const ViewProject = () => {
     reciveddate: "",
     deadline: "",
     status: 0,
-    assignto: "",
+    assignto: [],
   });
   const [projectForm, setProjectForm] = useState({
     projectname: "",
-    assignto: "",
+    assignto: [],
     description: "", // default assignee
   });
   const [activeEmployees, setActiveEmployees] = useState([]);
@@ -165,7 +166,9 @@ const ViewProject = () => {
             ? new Date(data.data.deadline).toISOString().split("T")[0]
             : "",
           status: data.data.status || 0,
-          assignto: data.data.assignto?._id || "",
+          assignto: Array.isArray(data.data.assignto)
+            ? data.data.assignto.map((assignee) => assignee._id) // Extracts an array of `_id`s
+            : [], // Default to an empty array if undefined
         });
       } else {
         console.error("Error fetching project:", data.msg);
@@ -317,7 +320,7 @@ const ViewProject = () => {
         {/* Project Details */}
         <div className="grid grid-cols-12 gap-2 h-fit">
           <div className="bg-blue-50 dark:bg-neutral-900 p-2 rounded-md h-ful col-span-12 md:col-span-3 flex justify-between">
-            <div className="flex flex-col gap-10 w-full">
+            <div className="flex flex-col gap-5 w-full">
               <div className="flex flex-col gap-1 w-full">
                 <div className="flex justify-between gap-2">
                   <div className="relative">
@@ -420,49 +423,76 @@ const ViewProject = () => {
               </div>
 
               <div className="dark:bg-neutral-950 bg-white p-2 rounded-md flex flex-col gap-2">
-                <h2 className="text-base font-semibold">Assigned To</h2>
-                <div className="flex items-center justify-between gap-4">
+                <h2 className="text-base font-semibold">
+                  Assigned To {project.assignto.length}
+                </h2>
+                <div
+                  className={`flex items-center justify-between gap-4 max-h-72 overflow-y-scroll scrollbrhdn ${
+                    project.assignto.length > 5 ? "pt-10" : ""
+                  }`}
+                >
                   <div
-                    className="flex items-center gap-2 hover:bg-blue-500/20 hover:text-blue-500 rounded-md cursor-pointer py-1 duration-300 hover:px-1 hover:pr-2"
-                    onClick={() => handleViewClick(project.assignto?._id)}
+                    className={`flex flex-wrap gap-2 w-full  ${
+                      project.assignto.length > 5 ? "mr-2" : ""
+                    }`}
                   >
-                    <img
-                      src={project.assignto?.profile || userprofile}
-                      alt="Assignee Profile"
-                      className="w-12 h-12 rounded-lg shadow-md"
-                    />
-                    <div>
-                      <p className="text-base font-medium">
-                        {project.assignto?.name || "N/A"}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {project.assignto?.email?.substring(0, 20) || "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`mailto:${project.assignto?.email}`}
-                      target="_blank"
-                      className="bg-blue-500/20 p-1.5 group rounded-md"
-                    >
-                      <img
-                        src={OutlookIcon}
-                        alt="OutlookIcon"
-                        className="w-7 group-hover:scale-110 duration-100 rounded-full shadow-md"
-                      />
-                    </a>
-                    <a
-                      href={`MSTeams:/l/chat/0/0?users=${project.assignto?.email}`}
-                      target="_blank"
-                      className="bg-blue-500/20 p-1.5 group rounded-md"
-                    >
-                      <img
-                        src={teamsIcon}
-                        alt="teamsIcon"
-                        className="w-7 group-hover:scale-110 duration-100 rounded-full shadow-md"
-                      />
-                    </a>
+                    {Array.isArray(project.assignto) &&
+                    project.assignto.length > 0 ? (
+                      project.assignto.map((assignee) => (
+                        <div
+                          key={assignee._id}
+                          className="flex w-full items-center justify-between gap-1 hover:bg-blue-500/20 hover:text-blue-500 rounded-md cursor-pointer py-1 duration-300 hover:px-1 hover:pr-2"
+                          onClick={() => handleViewClick(assignee._id)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={assignee.profile || userprofile}
+                              alt={`${assignee.name}'s Profile`}
+                              className="w-10 h-10 rounded-lg shadow-md"
+                            />
+                            <div>
+                              <p className="text-sm font-medium">
+                                {assignee.name
+                                  ? `${assignee.name.split(" ")[0]} ${
+                                      assignee.name.split(" ")[1]?.charAt(0) ||
+                                      ""
+                                    }`.trim()
+                                  : "N/A"}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {assignee.email?.substring(0, 20) || "N/A"}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={`mailto:${assignee?.email}`}
+                              target="_blank"
+                              className="bg-blue-500/20 p-1.5 group rounded-md"
+                            >
+                              <img
+                                src={OutlookIcon}
+                                alt="OutlookIcon"
+                                className="w-5 group-hover:scale-110 duration-100 rounded-full shadow-md"
+                              />
+                            </a>
+                            <a
+                              href={`MSTeams:/l/chat/0/0?users=${assignee?.email}`}
+                              target="_blank"
+                              className="bg-blue-500/20 p-1.5 group rounded-md"
+                            >
+                              <img
+                                src={teamsIcon}
+                                alt="teamsIcon"
+                                className="w-5 group-hover:scale-110 duration-100 rounded-full shadow-md"
+                              />
+                            </a>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">Unassigned</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -564,6 +594,15 @@ const ViewProject = () => {
                 </div>
               </div>
 
+              <span>Assign To</span>
+              <MultiSelectDropdown
+                options={activeEmployees}
+                selectedValues={formData.assignto}
+                onChange={(selected) =>
+                  setFormData({ ...formData, assignto: selected })
+                }
+              />
+
               <TextField
                 label="Technologies"
                 value={formData.technologies}
@@ -604,25 +643,53 @@ const ViewProject = () => {
                 InputLabelProps={{ shrink: true }}
               />
 
-              <FormControl
+              {/* <FormControl
                 variant="outlined"
                 className={classNames(
-                  "col-span-12 sm:col-span-6 xl:col-span-2 text-xs",
+                  "col-span-12 sm:col-span-6 xl:col-span-2 text-xs ",
                   classes.root
                 )}
               >
-                <InputLabel id="assignto-label" className="w-52">
+                <InputLabel id="assignto-label" className="w-fit">
                   Assign To
                 </InputLabel>
                 <Select
                   labelId="assignto-label"
                   id="assignto"
                   label="Assign To"
-                  // name="assignto"
-                  value={formData.assignto}
+                  multiple
+                  value={formData.assignto || []} // Ensure it's always an array
                   onChange={(e) =>
                     setFormData({ ...formData, assignto: e.target.value })
                   }
+                  renderValue={(selected) => {
+                    if (!Array.isArray(selected)) return null; // Handle unexpected cases
+                    return (
+                      <div className="flex flex-wrap gap-1">
+                        {selected
+                          .map((id) =>
+                            activeEmployees.find((emp) => emp._id === id)
+                          )
+                          .filter(Boolean) // Remove undefined values
+                          .map((employee) => (
+                            <div
+                              key={employee._id}
+                              className="flex items-center gap-1 bg-blue-100 dark:bg-neutral-700 px-2 py-1 rounded-md"
+                            >
+                              <img
+                                src={employee.profileUrl || userprofile}
+                                alt={employee.name}
+                                className="w-5 h-5 rounded-full"
+                              />
+                              <span className="text-xs">
+                                {employee.name.split(" ")[0]}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    );
+                  }}
+                  className="h-32"
                   IconComponent={(props) => (
                     <ArrowDropDownRoundedIcon
                       {...props}
@@ -647,7 +714,7 @@ const ViewProject = () => {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
 
               <FormControl
                 variant="outlined"

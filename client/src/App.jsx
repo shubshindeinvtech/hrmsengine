@@ -74,7 +74,7 @@ function App() {
       // Admin accessible routes
       return (
         <>
-          <Route index element={<AdminDashboard />} />
+          <Route index element={<HRDashboard />} />
           <Route path="/clients" element={<Clients />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/settings" element={<Settings />} />

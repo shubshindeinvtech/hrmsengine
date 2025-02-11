@@ -21,6 +21,9 @@ import AdminLeave from "./AdminLeave";
 import NotFound from "../../../assets/images/norecordfound.svg";
 import { button } from "@nextui-org/theme";
 
+const currentYear = new Date().getFullYear();
+// const years = Array.from({ length: 5 }, (_, i) => currentYear - i); // Generate last 5 years
+
 const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
   const { _id } = useParams();
 
@@ -31,10 +34,14 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
   const [errors, setErrors] = useState("");
   const [expandedIndex, setExpandedIndex] = useState(null); // Track the expanded card
   const [loading, setLoading] = useState(false); // Track loading state
+  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonth, setSelectedMonth] = useState("all"); // Track selected month
   const [selectedStatus, setSelectedStatus] = useState("all"); // Track selected status
   const [message, setMessage] = useState("");
   const [formOpen, setFormOpen] = useState(null); // Track which record's form is open
+  const [years, setYears] = useState(
+    Array.from({ length: 10 }, (_, i) => currentYear - 5 + i)
+  );
 
   const formatDate = (dateString) => {
     const options = { weekday: "short", day: "2-digit", month: "short" };
@@ -94,16 +101,18 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
 
   const filterHistory = () => {
     return leavehistory.filter((record) => {
-      const recordMonth = new Date(record.fromdate).getMonth() + 1; // Months are 0-based
+      const recordYear = new Date(record.fromdate).getFullYear();
+      const recordMonth = new Date(record.fromdate).getMonth() + 1;
       const recordStatus = record.applicationstatus;
 
+      const yearFilter = selectedYear === recordYear;
       const monthFilter =
         selectedMonth === "all" || parseInt(selectedMonth, 10) === recordMonth;
       const statusFilter =
         selectedStatus === "all" ||
         parseInt(selectedStatus, 10) === recordStatus;
 
-      return monthFilter && statusFilter;
+      return yearFilter && monthFilter && statusFilter;
     });
   };
 
@@ -123,6 +132,7 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
   const handlePreviousMonth = () => {
     setSelectedMonth((prevMonth) => {
       if (prevMonth === "all" || prevMonth === "1") {
+        setSelectedYear((prevYear) => prevYear - 1);
         return "12";
       }
       return (parseInt(prevMonth, 10) - 1).toString();
@@ -132,16 +142,34 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
   const handleNextMonth = () => {
     setSelectedMonth((prevMonth) => {
       if (prevMonth === "all" || prevMonth === "12") {
+        setSelectedYear((prevYear) => prevYear + 1);
         return "1";
       }
       return (parseInt(prevMonth, 10) + 1).toString();
     });
   };
 
+  const handleYearChange = (e) => {
+    const newYear = parseInt(e.target.value, 10);
+    setSelectedYear(newYear);
+
+    if (newYear === years[0]) {
+      setYears((prevYears) =>
+        Array.from({ length: 10 }, (_, i) => newYear - 5 + i)
+      );
+    } else if (newYear === years[years.length - 1]) {
+      setYears((prevYears) =>
+        Array.from({ length: 10 }, (_, i) => newYear - 5 + i)
+      );
+    }
+  };
+
   // Function to clear all filters
   const clearFilters = () => {
     setSelectedMonth("all");
     setSelectedStatus("all");
+    setSelectedYear(currentYear);
+    setYears(Array.from({ length: 10 }, (_, i) => currentYear - 5 + i));
   };
 
   const toggleMoreInfo = (index) => {
@@ -256,7 +284,7 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
                 className="group-hover:-translate-x-1 duration-300 text-black dark:text-white"
               />
             </button>
-            <select
+            {/* <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
               className="px-1.5 py-2 rounded-md bg-sky-100 dark:bg-neutral-950 text-xs"
@@ -274,6 +302,33 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
               <option value="10">October</option>
               <option value="11">November</option>
               <option value="12">December</option>
+            </select> */}
+
+            {/* Year Filter */}
+            <select
+              value={selectedYear}
+              onChange={handleYearChange}
+              className="px-1.5 py-2 rounded-md bg-gray-200 dark:bg-neutral-950 text-xs w-24 "
+            >
+              {years.map((year) => (
+                <option key={year} value={year} className=" ">
+                  {year}
+                </option>
+              ))}
+            </select>
+
+            {/* Month Filter */}
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="px-1.5 py-2 rounded-md bg-sky-100 dark:bg-neutral-950 text-xs w-24"
+            >
+              <option value="all">All</option>
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {new Date(0, i).toLocaleString("default", { month: "long" })}
+                </option>
+              ))}
             </select>
             <button
               onClick={handleNextMonth}

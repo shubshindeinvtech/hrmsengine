@@ -67,15 +67,15 @@ const getLeaveDetails = async (req, res) => {
 // Function to apply for leave
 const applyLeave = async (req, res) => {
   try {
-    // const errors = validationResult(req);
+    const errors = validationResult(req);
 
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     msg: "Validation errors",
-    //     errors: errors.array().map((err) => err.msg),
-    //   });
-    // }
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        msg: "Validation errors",
+        errors: errors.array().map((err) => err.msg),
+      });
+    }
 
     const {
       employee_id,
@@ -86,7 +86,15 @@ const applyLeave = async (req, res) => {
       holidayname,
       reason,
       halfday,
+      totaldays
     } = req.body;
+
+    if (!reason) {
+      return res.status(400).json({ message: "Reason is required." });
+    }
+    // if (!reason.length <= 10) {
+    //   return res.status(400).json({ message: "Add Mininum Description." });
+    // }
 
     // Validate input data
     if (

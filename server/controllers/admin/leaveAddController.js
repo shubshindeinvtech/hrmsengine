@@ -5,6 +5,7 @@ const Employee = require("../../model/employeeModel");
 const { CronJob } = require("cron");
 const { sendMail } = require("../../helpers/mailer");
 const { sendLog } = require('./settingController');
+const mongoose = require("mongoose");
 
 
 const EXCLUDE_ID = "67a9bdd0dec87617f2ff2c9a"; // Admin _id exclude
@@ -368,42 +369,184 @@ const addHolidays = async (req, res) => {
   }
 };
 
-const deleteHoliday = async (req, res) => {
+const updateHolidays = async (req, res) => {
   try {
-    const { holidayid } = req.body;
+    // Get the holiday data from the request body
+    const { optionalholiday, mandatoryholiday, weekendHoliday } = req.body;
 
-    if (!holidayid) {
+    // Validate input format
+    if (
+      !Array.isArray(optionalholiday) ||
+      !Array.isArray(mandatoryholiday) ||
+      !Array.isArray(weekendHoliday)
+    ) {
       return res.status(400).json({
         success: false,
-        msg: "Holiday ID is required for delete",
+        msg: "Invalid data format. Ensure optionalholiday, mandatoryholiday, and weekendHoliday are arrays.",
       });
     }
 
-    const holidayRecords = await leavebalance.findOne({
-      _id: holidayid,
-    });
+    console.log(
+      "Updating holidays:",
+      "optional",
+      optionalholiday,
+      "mandatory",
+      mandatoryholiday,
+      "weekend",
+      weekendHoliday
+    );
 
-    if (!holidayRecords) {
-      return res.status(404).json({
-        success: false,
-        msg: "Holiday not found",
-      });
-    }
+    // Find all leave balance records
+    const leaveRecords = await leavebalance.find();
 
-    await leavebalance.deleteOne({ _id: holidayid });
-    return res.status(200).json({
+    // Process each leave record
+    await Promise.all(
+      leaveRecords.map(async (leaveRecord) => {
+        // Function to check if a holiday exists before updating
+        const updateHolidayList = (existingHolidays, newHolidays) => {
+          newHolidays.forEach((newHoliday) => {
+            const existingIndex = existingHolidays.findIndex(
+              (h) => h.name === newHoliday.name && h.date === newHoliday.date
+            );
+
+            if (existingIndex !== -1) {
+              // Update existing holiday
+              existingHolidays[existingIndex] = { ...existingHolidays[existingIndex], ...newHoliday };
+            } else {
+              // Add new holiday if not found
+              existingHolidays.push(newHoliday);
+            }
+          });
+          return existingHolidays;
+        };
+
+        // Check if the holiday fields exist before updating
+        if (!leaveRecord.optionalholiday) {
+          leaveRecord.optionalholiday = { optionalholidaylist: [] };
+        }
+        if (!leaveRecord.mandatoryholiday) {
+          leaveRecord.mandatoryholiday = [];
+        }
+        if (!leaveRecord.weekendHoliday) {
+          leaveRecord.weekendHoliday = [];
+        }
+
+        // Update the leave record with new or modified holidays
+        leaveRecord.optionalholiday.optionalholidaylist = updateHolidayList(
+          leaveRecord.optionalholiday.optionalholidaylist,
+          optionalholiday
+        );
+        leaveRecord.mandatoryholiday = updateHolidayList(
+          leaveRecord.mandatoryholiday,
+          mandatoryholiday
+        );
+        leaveRecord.weekendHoliday = updateHolidayList(
+          leaveRecord.weekendHoliday,
+          weekendHoliday
+        );
+
+        // Save the updated leave record
+        await leaveRecord.save();
+      })
+    );
+
+    res.status(200).json({
       success: true,
-      msg: "Holiday deleted successfully",
+      msg: "Holidays have been updated successfully.",
     });
   } catch (error) {
-    console.error("Error deleting Holiday:", error);
-    return res.status(500).json({
+    console.error("Error updating holidays:", error);
+    res.status(500).json({
       success: false,
-      msg: "Failed to delete Holiday",
+      msg: "Server error",
       error: error.message,
     });
   }
 };
+
+const deleteHoliday = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    // Validate holiday name
+    if (!name || typeof name !== "string") {
+      return res.status(400).json({
+        success: false,
+        msg: "Invalid or missing holiday name",
+      });
+    }
+
+    console.log("Deleting holiday with name:", name);
+
+    // Update all records by removing holiday from any list where it appears
+    const result = await leavebalance.updateMany(
+      {}, // Update all employees
+      {
+        $pull: {
+          "optionalholiday.optionalholidaylist": { name: name },
+          mandatoryholiday: { name: name },
+          weekendHoliday: { name: name },
+        },
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No matching holiday found in any record.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      msg: "Holiday deleted successfully for all employees.",
+    });
+  } catch (error) {
+    console.error("Error deleting holiday:", error);
+    res.status(500).json({
+      success: false,
+      msg: "Server error",
+      error: error.message,
+    });
+  }
+};
+
+// const deleteHoliday = async (req, res) => {
+//   try {
+//     const { holidayid } = req.body;
+
+//     if (!holidayid) {
+//       return res.status(400).json({
+//         success: false,
+//         msg: "Holiday ID is required for delete",
+//       });
+//     }
+
+//     const holidayRecords = await leavebalance.findOne({
+//       _id: holidayid,
+//     });
+
+//     if (!holidayRecords) {
+//       return res.status(404).json({
+//         success: false,
+//         msg: "Holiday not found",
+//       });
+//     }
+
+//     await leavebalance.deleteOne({ _id: holidayid });
+//     return res.status(200).json({
+//       success: true,
+//       msg: "Holiday deleted successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error deleting Holiday:", error);
+//     return res.status(500).json({
+//       success: false,
+//       msg: "Failed to delete Holiday",
+//       error: error.message,
+//     });
+//   }
+// };
 
 const viewHolidays = async (req, res) => {
   try {
@@ -748,7 +891,7 @@ const approveLeave = async (req, res) => {
 // Condition 3: If currentStatus is 1 and applicationstatus is 2 (reverse the balances like Condition 2)
 // If currentStatus is 0 and applicationstatus is 2, only update the status without changing balances
 
-addLeaves();
+// addLeaves();
 // updateOptionalHolidaysOnJan1st();
 
 // const jobAddLeaves = new CronJob("*/1 * * * *", () => {
@@ -773,4 +916,5 @@ module.exports = {
   updateLeaveBalanceForNewEmployee,
   approveLeave,
   deleteHoliday,
+  updateHolidays
 };

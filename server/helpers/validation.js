@@ -106,6 +106,7 @@ exports.leaveApplicationValidator = [
   check("leavetype", "leavetype is required").not().isEmpty(),
   check("fromdate", "fromdate is required").not().isEmpty(),
   check("todate", "todate is required").not().isEmpty(),
+  // check("reason", "reason is required").not().isEmpty(),
 ];
 
 exports.deleteLeaveApplicationValidator = [

@@ -93,6 +93,12 @@ const Projects = () => {
     (project) => project.status === 1
   ).length;
 
+  const handleViewClick = (employeeId) => {
+    navigate(`/pim/employee-details/${employeeId}`, {
+      state: { activeTab: "Info" }, // Pass "Leave" as the default active tab
+    });
+  };
+
   return (
     <div className="h-full pb-20">
       <div className="bg-white dark:bg-neutral-950 p-2 rounded-md flex flex-col gap-2 text-black dark:text-white h-full min-h-full">
@@ -218,19 +224,63 @@ const Projects = () => {
                       ? new Date(project.deadline).toLocaleDateString()
                       : "N/A"}
                   </div>
-                  <div className="col-span-3 flex items-center gap-2   justify-between">
-                    <span className="flex md:hidden"> Assigne To</span>
-                    <div className="flex items-center gap-1">
-                      <img
-                        src={project.assignto.profile || userprofile}
-                        alt={project.assignto.name}
-                        width="25"
-                        height="25"
-                        className="rounded-md"
-                      />
-                      <span>{project.assignto.name}</span>
+                  <div className="col-span-3 flex items-center gap-2 justify-between">
+                    <span className="flex md:hidden">Assigned To</span>
+                    {/* <div className="flex items-center gap-1"> */}
+                    <div className="flex flex-wrap items-center gap-0">
+                      {project.assignto && project.assignto.length > 0 ? (
+                        <>
+                          {project.assignto.slice(0, 3).map((employee) => (
+                            <div
+                              key={employee._id}
+                              className="relative -ml-2"
+                              onMouseEnter={() => setHoveredId(employee._id)}
+                              onMouseLeave={() => setHoveredId(null)}
+                              onClick={() => handleViewClick(employee._id)}
+                            >
+                              <img
+                                src={employee.profile || userprofile}
+                                alt={employee.name}
+                                className="w-8 h-8 rounded-full object-cover cursor-pointer transition-transform duration-200 hover:scale-110"
+                              />
+                            </div>
+                          ))}
+
+                          {project.assignto.length > 3 && (
+                            <div className="relative">
+                              {/* +N Badge with Hoverable Tooltip */}
+                              <div className="w-8 h-8 flex items-center justify-center bg-gray-300 dark:bg-neutral-700 text-sm font-medium rounded-full cursor-pointer group/profile">
+                                +{project.assignto.length - 3}
+                                {/* Tooltip on Hover */}
+                                <ul className="absolute hidden group-hover/profile:flex top-1/2 scrollbrhdn max-h-40 translate-x-1/2 bottom-ful mb-2  overflow-y-auto w-52 flex-col gap-1 bg-white dark:bg-neutral-800  p-2 rounded-md shadow-lg z-50">
+                                  {project.assignto.map((employee) => (
+                                    <li
+                                      key={employee._id}
+                                      className="flex items-center gap-2 p-1 hover:bg-blue-100 dark:hover:bg-neutral-600 rounded cursor-pointer"
+                                      onClick={() =>
+                                        handleViewClick(employee._id)
+                                      }
+                                    >
+                                      <img
+                                        src={employee.profile || userprofile}
+                                        alt={employee.name}
+                                        className="w-8 h-8 rounded-xl object-cover transition-transform duration-200 hover:scale-110"
+                                      />
+                                      {employee.name}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span>Unassigned</span>
+                      )}
                     </div>
+                    {/* </div> */}
                   </div>
+
                   <div className="col-span-1 md:text-center">
                     <button
                       onClick={() => handleViewProject(project._id)}
@@ -243,7 +293,7 @@ const Projects = () => {
               ))
             ) : (
               <p className="mt-2 h-full bg-blue-50 dark:bg-neutral-900 rounded-md items-center justify-center flex ">
-                No projects found
+                No projects found{searchQuery && ` for "${searchQuery}"`}
               </p>
             )}
           </div>

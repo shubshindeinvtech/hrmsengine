@@ -16,6 +16,7 @@ import Calendar from "../custom/Calendar"; // Import the Calendar component
 import { motion } from "framer-motion";
 import { FaFaceFrownOpen } from "react-icons/fa6";
 import { BiSolidHappyHeartEyes } from "react-icons/bi";
+import { FaFaceSadTear } from "react-icons/fa6";
 
 const GlobalStyles = createGlobalStyle`
 .MuiPaper-root{
@@ -106,6 +107,7 @@ const ApplyLeave = () => {
     holidayname: "",
     reason: "",
     halfday: false,
+    halfday: "",
   });
   const [errors, setErrors] = useState([]);
   const [message, setMessage] = useState("");
@@ -245,13 +247,9 @@ const ApplyLeave = () => {
           holidayname: "",
           reason: "",
           halfday: false,
+          totaldays: "",
         });
-        if (formData.leavetype === "leave") {
-          setMessage("Leave application submitted successfully!");
-        } else {
-          setMessage("Holiday Leave application submitted successfully!");
-        }
-        setErrors([]); // Clear errors on successful submission
+        setMessage("Application submitted successfully!");
         setSelectedHolidayDate(""); // Reset the selected holiday date
         setTimeout(() => setMessage(""), 4000);
       } else {
@@ -509,16 +507,17 @@ const ApplyLeave = () => {
           )}
         </div>
         {errors.length > 0 && (
-          <div className="absolute right-2 bottom-2 flex flex-col gap-2 z-40">
+          <div className="absolute top-4 md:top-0 md:w-[70%] w-[92%]  flex flex-col gap-2 items-center justify-center z-50">
             {errors.map((error, index) => (
               <motion.div
-                initial={{ opacity: 0, x: -15 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -15 }}
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 15 }}
+                exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3, delay: index * 0.2 }}
                 key={index}
-                className="text-red-500 bg-red-600/20 rounded-md py-2 px-4"
+                className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-md text-center flex  items-center gap-2"
               >
+                <FaFaceSadTear fontSize={20} />
                 {error}
               </motion.div>
             ))}

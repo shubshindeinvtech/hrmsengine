@@ -42,7 +42,7 @@ const addProject = async (req, res) => {
       reciveddate,
       deadline,
       status,
-      assignto,
+      assignto: Array.isArray(assignto) ? assignto : [assignto],
     });
 
     const projectData = await newProjectData.save();
@@ -104,7 +104,7 @@ const updateProject = async (req, res) => {
           reciveddate,
           deadline,
           status,
-          assignto,
+          assignto: Array.isArray(assignto) ? assignto : [assignto],
         },
       },
       { new: true }

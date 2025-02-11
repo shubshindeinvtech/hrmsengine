@@ -174,6 +174,7 @@ router.post(
   addLeavesValidator,
   leaveAddController.addLeaves
 );
+
 router.post(
   "/addholidays",
   auth,
@@ -181,11 +182,18 @@ router.post(
   addHolidayValidator,
   leaveAddController.addHolidays
 );
+
 router.post(
-  "/deleteholidays",
+  "/updateholidays",
   auth,
   onlyAdminAccess,
-  addHolidayValidator,
+  leaveAddController.updateHolidays
+)
+
+router.post(
+  "/deleteholidays",
+  // auth,
+  // onlyAdminAccess,
   leaveAddController.deleteHoliday
 );
 
