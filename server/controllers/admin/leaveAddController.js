@@ -667,7 +667,7 @@ const updateLeaveBalanceForNewEmployee = async (req, res) => {
 
 const approveLeave = async (req, res) => {
   try {
-    const { employee_id, application_id, applicationstatus } = req.body;
+    const { employee_id, application_id, applicationstatus, comment } = req.body;
 
     // Check if employee exists
     const isEmployee = await leaveapplication.findOne({ employee_id });
@@ -802,7 +802,7 @@ const approveLeave = async (req, res) => {
     // Update the application status (only after all checks have passed)
     const newRecord = await leaveapplication.findByIdAndUpdate(
       { _id: application_id },
-      { applicationstatus },
+      { applicationstatus, comment },
       { new: true }
     );
 
@@ -849,6 +849,9 @@ const approveLeave = async (req, res) => {
             ? `<span style="color: red; font-weight: bold;">Declined</span>`
             : `<span style="color: gray; font-weight: bold;">Unknown</span>`
       }
+        </p>
+        <p style="margin: 10px 0 0; font-size: 1rem; color: #333;">
+              <strong>Comment:</strong> ${newRecord.comment}
         </p>
       </div>
     </div>

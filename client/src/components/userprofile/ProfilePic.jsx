@@ -9,6 +9,10 @@ import { TiMinus } from "react-icons/ti";
 import ApiendPonits from "../../api/APIEndPoints.json";
 import { TiFlash } from "react-icons/ti";
 import { IoFlashOff } from "react-icons/io5";
+import { motion } from "framer-motion";
+import { FaFaceFrownOpen } from "react-icons/fa6";
+import { BiSolidHappyHeartEyes } from "react-icons/bi";
+import { FaFaceSadTear } from "react-icons/fa6";
 
 const ProfilePic = () => {
   const { userData } = useContext(AuthContext);
@@ -313,11 +317,21 @@ const ProfilePic = () => {
         </>
       )}
 
-      {error && (
-        <div className="absolute bottom-4 right-4 bg-red-500 text-white p-3 rounded-md z-10">
-          {error}
-        </div>
-      )}
+      <div className="absolute top-4 md:top-0 md:w-[70%] w-[92%]  flex flex-col gap-2 items-center justify-center z-50">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3, delay: index * 0.2 }}
+            key={index}
+            className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-lg text-center flex  items-center gap-2"
+          >
+            <FaFaceSadTear fontSize={20} />
+            {error}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 };

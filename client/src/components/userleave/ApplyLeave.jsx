@@ -499,7 +499,7 @@ const ApplyLeave = () => {
               animate={{ opacity: 1, y: 15 }}
               exit={{ opacity: 0, y: 0 }}
               transition={{ duration: 0.3 }}
-              className=" text-green-500 border border-green-500/10 bg-green-500/10 py-2 px-4 w-fit rounded-md text-center flex items-center gap-2"
+              className=" text-green-500 border border-green-500/10 bg-green-500/10 py-2 px-4 w-fit rounded-lg text-center flex items-center gap-2"
             >
               <BiSolidHappyHeartEyes fontSize={20} />
               {message}
@@ -515,7 +515,7 @@ const ApplyLeave = () => {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3, delay: index * 0.2 }}
                 key={index}
-                className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-md text-center flex  items-center gap-2"
+                className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-lg text-center flex  items-center gap-2"
               >
                 <FaFaceSadTear fontSize={20} />
                 {error}

@@ -27,6 +27,10 @@ import { Textarea } from "@chakra-ui/react";
 import { FaLinkedin } from "react-icons/fa";
 import teamsIcon from "../../assets/images/Teams.png";
 import AssignToSelect from "./AssignToSelect";
+import { motion } from "framer-motion";
+import { FaFaceFrownOpen } from "react-icons/fa6";
+import { BiSolidHappyHeartEyes } from "react-icons/bi";
+import { FaFaceSadTear } from "react-icons/fa6";
 
 const GlobalStyles = createGlobalStyle`
 .MuiPaper-root{
@@ -555,11 +559,22 @@ const ViewClient = () => {
                               : "border-red-500 ring-2 ring-red-500 dark:bg-neutral-900 bg-gray-200"
                           )}
                         />
-                        {error && (
-                          <div className=" text-red-500 bg-red-500/20 p-2 rounded-md">
-                            {error}
-                          </div>
-                        )}
+
+                        <div className="absolute top-4 md:top-0 md:w-[70%] w-[92%]  flex flex-col gap-2 items-center justify-center z-50">
+                          {error && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -15 }}
+                              animate={{ opacity: 1, y: 15 }}
+                              exit={{ opacity: 0, y: -15 }}
+                              transition={{ duration: 0.3, delay: index * 0.2 }}
+                              key={index}
+                              className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-lg text-center flex  items-center gap-2"
+                            >
+                              <FaFaceSadTear fontSize={20} />
+                              {error}
+                            </motion.div>
+                          )}
+                        </div>
                         <div className="flex justify-center gap-2 w-full">
                           <button
                             onClick={handleDeleteClick}

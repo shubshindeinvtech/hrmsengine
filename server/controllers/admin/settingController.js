@@ -240,7 +240,7 @@ const deleteCountry = async (req, res) => {
     if (!countries || !Array.isArray(countries)) {
       return res.status(400).json({
         success: false,
-        msg: "Countries array is required.",
+        msg: "Country array is required.",
       });
     }
 

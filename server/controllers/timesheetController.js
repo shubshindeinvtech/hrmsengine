@@ -40,6 +40,12 @@ const fillTimesheet = async (req, res) => {
         msg: "You're not assigned to this project.",
       });
     }
+    if (projectdetails.status === 1) {
+      return res.status(400).json({
+        success: false,
+        msg: "This project is inactive now, Contact to Admin to active it",
+      });
+    }
 
     if (!employee) {
       return res.status(400).json({

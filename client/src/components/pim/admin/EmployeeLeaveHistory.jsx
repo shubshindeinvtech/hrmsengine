@@ -15,6 +15,8 @@ import { FaFilterCircleXmark } from "react-icons/fa6";
 import { CgArrowsExchange } from "react-icons/cg";
 import { IoMdSave } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import { FaFaceSadTear } from "react-icons/fa6";
+import { BiSolidHappyHeartEyes } from "react-icons/bi";
 
 import AdminLeave from "./AdminLeave";
 
@@ -43,6 +45,11 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
     Array.from({ length: 10 }, (_, i) => currentYear - 5 + i)
   );
 
+  const [comment, setComment] = useState("");
+  const [commentmodel, setCommentmodel] = useState(false);
+  const [applicationstate, setApplicationStatus] = useState();
+  const [applicationid, setApplicationId] = useState();
+
   const formatDate = (dateString) => {
     const options = { weekday: "short", day: "2-digit", month: "short" };
     return new Date(dateString).toLocaleDateString("en-US", options);
@@ -68,6 +75,7 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
 
       if (data.success) {
         setLeaveHistory(data.leavehistory);
+        console.log(data.leavehistory);
       } else {
         setErrors(data.msg || "Failed to fetch leave history.");
         setTimeout(() => setErrors(""), 4000);
@@ -180,7 +188,18 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
     setFormOpen(index);
   };
 
+  const openModel = async (recordId, status) => {
+    setCommentmodel(true);
+    setApplicationStatus(status);
+    setApplicationId(recordId);
+  };
+
   const handleSave = async (recordId, status) => {
+    if (!comment.trim()) {
+      setErrors("Comment is required!");
+      setTimeout(() => setErrors(""), 4000);
+      return;
+    }
     try {
       const response = await fetch(
         `${ApiendPonits.baseUrl}${ApiendPonits.endpoints.approveleave}`,
@@ -192,13 +211,13 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
           },
           body: JSON.stringify({
             employee_id: employee_id,
-            application_id: recordId,
-            applicationstatus: status,
+            application_id: applicationid,
+            applicationstatus: applicationstate,
+            comment,
           }),
         }
       );
       const data = await response.json();
-      console.log(data);
 
       if (data.success) {
         getLeaveHistory();
@@ -213,6 +232,7 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
       setErrors(error.message || "Error fetching leave history.");
       setTimeout(() => setErrors(""), 4000);
     } finally {
+      setCommentmodel(false);
       setFormOpen(null);
       setLoading(false); // Stop loading
     }
@@ -391,24 +411,25 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
           <div className="hidden md:grid grid-cols-12 gap-2 bg-sky-100 dark:bg-neutral-800 px-2 py-3 rounded-md font-semibold">
             <div className="col-span-2">Leave Type</div>
             <div className="col-span-2">Reason</div>
-            <div className="col-span-2">From</div>
-            <div className="col-span-2">To</div>
+            <div className="col-span-1">From</div>
+            <div className="col-span-1">To</div>
             <div className="col-span-1">Total</div>
-            <div className="col-span-3">Status</div>
+            <div className="col-span-2">Status</div>
+            <div className="col-span-2">Comments</div>
           </div>
           {[...filterHistory()].reverse().map((record, index) => (
             <div className="" key={index}>
               {/* desktop */}
               <div
                 key={index}
-                className="hidden md:grid col-span-12 overflow-y-scroll scrollbrhdn  scrollbar-hide grid-cols-12 gap-2 bg-sky-50 dark:bg-neutral-950 px-2 py-3 rounded-md font-semibold group h-full "
+                className="hidden md:grid col-span-12 overflow-y-scroll scrollbrhdn items-center  scrollbar-hide grid-cols-12 gap-2 bg-sky-50 dark:bg-neutral-950 px-2 py-3 rounded-md font-semibold group h-full "
               >
                 <div className="col-span-2">{record.leavetype}</div>
                 <div className="col-span-2">{record.reason}</div>
-                <div className="col-span-2">{record.fromdate}</div>
-                <div className="col-span-2">{record.todate}</div>
+                <div className="col-span-1">{record.fromdate}</div>
+                <div className="col-span-1">{record.todate}</div>
                 <div className="col-span-1">{record.totaldays}</div>
-                <div className="col-span-3 flex items-center gap-1 ">
+                <div className="col-span-2 flex items-center gap-1 ">
                   <div>
                     {/* <span className={getStatusClass(record.applicationstatus)}>
                       {record.applicationstatus === 0
@@ -418,7 +439,7 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
                         : "Declined"}
                     </span> */}
                     {formOpen === index ? (
-                      <div className=" flex flex- bg-sky-200 dark:bg-neutral-800 p-1  rounded-md items-center gap-1 text-xs ">
+                      <div className=" flex flex- bg-sky-200 dark:bg-neutral-900 p-1  rounded-md items-center gap-1 text-xs ">
                         {/* <button
                           onClick={() => handleSave(record._id, 0)}
                           className="bg-yellow-600/15 text-yellow-500 hover:bg-yellow-500/25 py-1 px-2 rounded-md w-full"
@@ -426,20 +447,20 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
                           Pending
                         </button> */}
                         <button
-                          onClick={() => handleSave(record._id, 1)}
+                          onClick={() => openModel(record._id, 1)}
                           className="bg-green-500/15 text-green-500 hover:bg-green-500/25 py-1 px-2 rounded-md w-full"
                         >
                           Approved
                         </button>
                         <button
-                          onClick={() => handleSave(record._id, 2)}
+                          onClick={() => openModel(record._id, 2)}
                           className="bg-red-500/15 text-red-500 hover:bg-red-500/25 py-1 px-2 rounded-md w-full"
                         >
                           Declined
                         </button>
                         <button
                           onClick={() => setFormOpen(null)}
-                          className="p-1 bg-sky-100 dark:bg-neutral-900 text-red-500 rounded-md flex items-center"
+                          className="p-1 bg-sky-100 dark:bg-neutral-800 text-red-500 rounded-md flex items-center"
                         >
                           <IoClose fontSize={16} />
                         </button>
@@ -467,6 +488,9 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
                       <CgArrowsExchange fontSize={15} />
                     </button>
                   )}
+                </div>
+                <div className="col-span-2 text-xs">
+                  {record.comment || "NA"}
                 </div>
               </div>
               {/* mobile */}
@@ -503,20 +527,20 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
                     </span> */}
                         {formOpen === index ? (
                           <div className=" flex flex- bg-sky-100 dark:bg-neutral-900 p-1  rounded-md items-center gap-1 text-xs ">
-                            <button
-                              onClick={() => handleSave(record._id, 0)}
+                            {/* <button
+                              onClick={() => openModel(record._id, 1)}
                               className="bg-yellow-600/15 text-yellow-500 hover:bg-yellow-500/25 py-1 px-2 rounded-md w-full"
                             >
                               Pending
-                            </button>
+                            </button> */}
                             <button
-                              onClick={() => handleSave(record._id, 1)}
+                              onClick={() => openModel(record._id, 1)}
                               className="bg-green-500/15 text-green-500 hover:bg-green-500/25 py-1 px-2 rounded-md w-full"
                             >
                               Approved
                             </button>
                             <button
-                              onClick={() => handleSave(record._id, 2)}
+                              onClick={() => openModel(record._id, 2)}
                               className="bg-red-500/15 text-red-500 hover:bg-red-500/25 py-1 px-2 rounded-md w-full"
                             >
                               Declined
@@ -634,17 +658,78 @@ const EmployeeLeaveHistory = (Id, getLeaveRecord) => {
         </motion.div>
       )}
 
-      {message && (
-        <div className="absolute bg-green-600 right-2 bottom-2 p-2 text-white rounded-md z-40">
-          {message}
+      {/* Modal Popup */}
+      {commentmodel && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50 transition-opacity duration-300">
+          <div className="bg-white dark:bg-neutral-900 p-4 rounded-xl shadow-xl w-[400px] max-w-full transform transition-all scale-100 flex flex-col gap-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+              {applicationstate === 1 ? (
+                <div className="flex items-center gap-3">
+                  <span className="w-1.5 h-7 bg-green-500 rounded-r-md rounded-l-sm"></span>
+                  <span>Approve Leave</span>
+                </div>
+              ) : applicationstate === 2 ? (
+                <div className="flex items-center gap-3">
+                  <span className="w-1.5 h-7 bg-red-500 rounded-r-md rounded-l-sm"></span>
+                  <span>Decline Leave</span>
+                </div>
+              ) : (
+                ""
+              )}
+            </h2>
+
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full p-3 rounded-md bg-neutral-100 dark:bg-neutral-800 dark:text-white border border-neutral-300 dark:border-neutral-600 focus:ring-2 focus:ring-blue-500 outline-none transition"
+              placeholder="Enter comment..."
+              rows="4"
+              autoFocus
+            ></textarea>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setCommentmodel(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-neutral-600/20 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-500 hover:bg-blue-600/20 transition"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {errors && (
-        <div className="absolute bg-red-600 right-2 bottom-2 p-2 text-white rounded-md z-40">
-          {errors}
-        </div>
-      )}
+      <div className=" absolute md:top-5 top-4 md:w-[70%] w-[92%]  flex items-center justify-center z-50">
+        {errors && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute   text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-md text-center flex items-center gap-2"
+          >
+            <FaFaceSadTear fontSize={20} />
+            {errors}
+          </motion.div>
+        )}
+        {message && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute  text-green-500 border border-green-500/10 bg-green-500/10 py-2 px-4 w-fit rounded-md text-center flex items-center gap-2"
+          >
+            <BiSolidHappyHeartEyes fontSize={20} />
+            {message}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 };

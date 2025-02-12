@@ -28,6 +28,7 @@ import Loading from "../Loading";
 import ApiendPonits from "../../api/APIEndPoints.json";
 import { IoToday } from "react-icons/io5";
 import TruncatedTextWithTooltip from "../custom/TruncatedTextWithTooltip";
+import { IoFlashOff, IoFlash } from "react-icons/io5";
 
 const GlobalStyles = createGlobalStyle`
 .MuiPaper-root{
@@ -995,8 +996,31 @@ export default function TimeSheet({ record, index }) {
                       <GlobalStyles />
                       <MenuItem value="">Choose value</MenuItem>
                       {projects.map((project) => (
-                        <MenuItem key={project._id} value={project._id}>
-                          {project.projectname}
+                        <MenuItem
+                          key={project._id}
+                          value={project._id}
+                          className="group"
+                        >
+                          <div className="w-full flex justify-between">
+                            <span>{project.projectname}</span>
+                            <span>
+                              {project.status === 0 ? (
+                                <div className="bg-green-500/20 text-green-500 px-2 py-1 rounded-md text-xs flex items-center gap-1">
+                                  <IoFlash />
+                                  <span className="hidden group-hover:flex ">
+                                    Active
+                                  </span>
+                                </div>
+                              ) : (
+                                <div className="bg-red-500/20 text-red-500 px-2 py-1 rounded-md text-xs flex items-center gap-1">
+                                  <IoFlashOff />
+                                  <span className="hidden group-hover:flex ">
+                                    Inactive
+                                  </span>
+                                </div>
+                              )}
+                            </span>
+                          </div>
                         </MenuItem>
                       ))}
                     </Select>
@@ -1157,7 +1181,7 @@ export default function TimeSheet({ record, index }) {
                   </FormControl>
                 </div>
                 <button
-                  className="col-span-12 sm:col-span-12 lg:col-span-2 mt-1.5 px-2 py-3.5 bg-blue-500/15 text-blue-500 font-bold text-[1rem] rounded-lg   flex items-center justify-center gap-2"
+                  className="col-span-12 sm:col-span-12 lg:col-span-2 md:mt-2 px-2 py-3.5 bg-blue-500/15 text-blue-500 font-bold text-[1rem] rounded-lg   flex items-center justify-center gap-2"
                   type="submit"
                 >
                   <FaSave fontSize={20} />
@@ -1171,23 +1195,19 @@ export default function TimeSheet({ record, index }) {
         {/* Timesheet Records */}
         <div className="overflow-y-scroll scrollbar-hide h-full">
           {error && (
-            <div className="absolute bottom-0 right-0 m-4 flex flex-col gap-2 z-50">
+            <div className="absolute md:top-0 top-4 md:w-[70%] w-[92%]  flex items-center flex-col gap-1 justify-center z-50">
               {(Array.isArray(error) ? error : [error]).map((err, index) => (
                 <motion.div
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 6000,
-                    damping: 30,
-                    duration: 0.3,
-                  }}
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 15 }}
+                  exit={{ opacity: 0, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
                   key={index}
-                  className="font-bold bg-red-300 dark:bg-black dark:border-2 border-red-950/45 p-3 rounded-lg flex items-center gap-2"
+                  className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-xl text-center flex items-center gap-2"
                 >
-                  <div className="text-red-600 p-1 rounded-lg">
-                    <FaFaceFrownOpen fontSize={22} />
-                  </div>
+                  {/* <div className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-md text-center flex items-center gap-2"> */}
+                  <FaFaceFrownOpen fontSize={22} />
+                  {/* </div> */}
                   {err.msg || err}
                 </motion.div>
               ))}

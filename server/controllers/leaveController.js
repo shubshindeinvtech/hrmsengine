@@ -352,6 +352,7 @@ const leavehistory = async (req, res) => {
       holidayname: record.holidayname,
       reason: record.reason,
       applicationstatus: record.applicationstatus,
+      comment: record.comment,
       totaldays: record.totaldays,
       halfday: record.halfday,
     }));

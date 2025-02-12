@@ -12,6 +12,9 @@ import Loading from "../../Loading";
 import { FaCheck } from "react-icons/fa6";
 import teamsIcon from "../../../assets/images/Teams.png";
 import OutlookIcon from "../../../assets/images/Outlook.png";
+import { motion } from "framer-motion";
+import { BiSolidHappyHeartEyes } from "react-icons/bi";
+import { FaFaceSadTear } from "react-icons/fa6";
 
 const AdminInfo = () => {
   const { _id } = useParams(); // Get the employee ID from URL params
@@ -1322,16 +1325,32 @@ const AdminInfo = () => {
         </div>
       </div>
 
-      {message && (
-        <div className="absolute bottom-4 right-4 bg-green-500 text-white p-3 rounded-md z-10">
-          {message}
-        </div>
-      )}
-      {error && (
-        <div className="absolute bottom-4 right-4 bg-red-500 text-white p-3 rounded-md z-10">
-          {error}
-        </div>
-      )}
+      <div className=" absolute md:top-4 top-10 md:w-[70%] w-[92%]  flex items-center justify-center z-50">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute   text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-lg text-center flex items-center gap-2"
+          >
+            <FaFaceSadTear fontSize={20} />
+            {error}
+          </motion.div>
+        )}
+        {message && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute  text-green-500 border border-green-500/10 bg-green-500/10 py-2 px-4 w-fit rounded-lg text-center flex items-center gap-2"
+          >
+            <BiSolidHappyHeartEyes fontSize={20} />
+            {message}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 };

@@ -101,7 +101,7 @@ const ResetPassword = ({ theme }) => {
                     animate={{ opacity: 1, y: 15 }}
                     exit={{ opacity: 0, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-4 text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-md text-center flex items-center gap-2"
+                    className="absolute top-4 text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-lg text-center flex items-center gap-2"
                   >
                     <FaFaceSadTear fontSize={20} />
                     {error}

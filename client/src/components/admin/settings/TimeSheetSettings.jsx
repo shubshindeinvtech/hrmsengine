@@ -7,6 +7,9 @@ import DepartmentSettings from "./DepartmentSettings";
 import DesignationSettings from "./DesignationSettings";
 import CountrySettings from "./CountrySettings";
 import ReportingManagerSettings from "./ReportingManagerSettings";
+import { FaFaceFrownOpen } from "react-icons/fa6";
+import { BiSolidHappyHeartEyes } from "react-icons/bi";
+import { FaFaceSadTear } from "react-icons/fa6";
 
 const Settings = () => {
   const token = localStorage.getItem("accessToken");
@@ -116,12 +119,7 @@ const Settings = () => {
       <h1 className="text-base font-bold border-b pb-3 text-gray-800 dark:text-white">
         Timesheet Limit Settings
       </h1>
-      {/* Display error if any */}
-      {error && (
-        <div className="bg-red-200 dark:bg-red-800 text-red-700 dark:text-red-200 p-4 rounded-lg mb-4">
-          {error}
-        </div>
-      )}
+
       <div className="flex flex-col  gap-2">
         <p className="text-sm text-gray-500 dark:text-gray-300">
           <strong>Last Updated At:</strong>{" "}
@@ -280,18 +278,35 @@ const Settings = () => {
         </form>
       </div>
 
-      {massage ? (
-        <motion.div
-          initial={{ opacity: 0, x: 5 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="absolute bottom-2 right-2 bg-green-500/20 text-green-500 py-2 px-4 rounded-lg "
-        >
-          {massage}
-        </motion.div>
-      ) : (
-        ""
-      )}
+      <div className=" absolute top-4 md:top-0 md:w-[70%] w-[92%]  flex items-center justify-center z-50">
+        {massage && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className=" text-green-500 border border-green-500/10 bg-green-500/10 py-2 px-4 w-fit rounded-lg text-center flex items-center gap-2"
+          >
+            <BiSolidHappyHeartEyes fontSize={20} />
+            {massage}
+          </motion.div>
+        )}
+      </div>
+      <div className="absolute top-4 md:top-0 md:w-[70%] w-[92%]  flex flex-col gap-2 items-center justify-center z-50">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 15 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3, delay: index * 0.2 }}
+            key={index}
+            className="text-red-500 border border-red-500/10 bg-red-500/10 py-2 px-4 w-fit rounded-lg text-center flex  items-center gap-2"
+          >
+            <FaFaceSadTear fontSize={20} />
+            {error}
+          </motion.div>
+        )}
+      </div>
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-lg z-50">

@@ -28,6 +28,10 @@ const leaveApplicationModel = new mongoose.Schema(
       type: Number, //0 pending, 1 approve, 2 reject
       default: 0,
     },
+    comment: {
+      type: String,
+      default: ""
+    },
     totaldays: {
       type: Number,
     },
