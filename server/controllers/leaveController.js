@@ -355,7 +355,41 @@ const leavehistory = async (req, res) => {
       comment: record.comment,
       totaldays: record.totaldays,
       halfday: record.halfday,
+      createdAt: formatDateTime(record.createdAt),
+      updatedAt: formatDateTime(record.updatedAt),
+      updatedDate: formatDate(record.updatedAt),  // Separate date
+      updatedTime: formatTime(record.updatedAt),
     }));
+
+    function formatDateTime(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }).replace(",", "");
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }); // Example: Feb 13 2025
+    }
+
+    function formatTime(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }); // Example: 10:18 AM
+    }
 
     res.status(200).json({
       success: true,
@@ -403,6 +437,7 @@ const allLeaveHistory = async (req, res) => {
             holidayname: leave.holidayname,
             reason: leave.reason,
             applicationstatus: leave.applicationstatus,
+            comment: leave.comment,
             totaldays: leave.totaldays,
             halfday: leave.halfday,
             createdAt: leave.createdAt,
@@ -430,6 +465,7 @@ const allLeaveHistory = async (req, res) => {
           holidayname: leave.holidayname,
           reason: leave.reason,
           applicationstatus: leave.applicationstatus,
+          comment: leave.comment,
           totaldays: leave.totaldays,
           halfday: leave.halfday,
           createdAt: leave.createdAt,

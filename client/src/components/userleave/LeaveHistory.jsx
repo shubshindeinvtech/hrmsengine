@@ -218,6 +218,8 @@ const LeaveHistory = () => {
     });
   };
 
+  console.log(leavehistory);
+
   // Count the statuses
   const statusCounts = leavehistory.reduce(
     (acc, record) => {
@@ -497,18 +499,45 @@ const LeaveHistory = () => {
               </div>
 
               {expandedIndex === index && (
-                <p>
-                  {record.leavetype === "Optional holiday" ? (
-                    ""
-                  ) : (
-                    <div>
-                      <strong>Cause - </strong>{" "}
-                      {record.reason || (
-                        <span className="text-xs">Not Mentioned</span>
-                      )}
+                <div className="flex flex-col gap-2">
+                  <p>
+                    {record.leavetype === "Optional holiday" ? (
+                      ""
+                    ) : (
+                      <div>
+                        <strong>Cause - </strong>{" "}
+                        {record.reason || (
+                          <span className="text-xs">Not Mentioned</span>
+                        )}
+                      </div>
+                    )}
+                  </p>
+                  {record.comment && (
+                    <hr className="rounded-full dark:border-neutral-700 border-blue-100" />
+                  )}
+                  {record.comment && (
+                    <div className="w-full flex flex-col gap-0.5">
+                      <span className="text-xs text-neutral-400 text-center">
+                        {record.updatedDate}
+                      </span>
+                      <div className="flex gap-2">
+                        <div className="bg-blue-600/20 text-blue-500 p-1 rounded-lg font-bold h-fit">
+                          HR
+                        </div>
+                        <p
+                          className={`${
+                            record.applicationstatus === 1 ? "" : ""
+                          } bg-blue-100 dark:bg-neutral-900 px-2 py-1 w-full rounded-b-lg rounded-tr-lg rounded-tl-sm flex flex-col items-cente gap-0.5`}
+                        >
+                          {record.comment || "NA"}
+                          <span className="text-xs text-neutral-400 text-end w-full">
+                            {record.updatedTime}
+                          </span>
+                        </p>
+                      </div>
                     </div>
                   )}
-                </p>
+                </div>
               )}
             </div>
           ))}
