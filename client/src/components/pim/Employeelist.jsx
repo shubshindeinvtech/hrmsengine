@@ -643,23 +643,27 @@ const Employeelist = () => {
                         />
                       </a>
                     </div>
-                    <div>
-                      <Tooltip
-                        title={"Delete " + employee.name}
-                        placement="top"
-                        arrow
-                      >
-                        <button
-                          type="button" // Ensure this button doesn't trigger form submission
-                          onClick={() =>
-                            handleDeleteClick(employee._id, employee.name)
-                          } // Pass employee._id
-                          className="bg-red-500/20 p-1.5 rounded-md text-red-500 "
+                    {employee.empid == userData.employeeData.empid ? (
+                      ""
+                    ) : (
+                      <div>
+                        <Tooltip
+                          title={"Delete " + employee.name}
+                          placement="top"
+                          arrow
                         >
-                          <MdDelete fontSize={17} />
-                        </button>
-                      </Tooltip>
-                    </div>
+                          <button
+                            type="button" // Ensure this button doesn't trigger form submission
+                            onClick={() =>
+                              handleDeleteClick(employee._id, employee.name)
+                            } // Pass employee._id
+                            className="bg-red-500/20 p-1.5 rounded-md text-red-500 "
+                          >
+                            <MdDelete fontSize={17} />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}

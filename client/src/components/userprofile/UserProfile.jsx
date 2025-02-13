@@ -506,29 +506,21 @@ const UserProfile = () => {
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="bg-red-200 dark:bg-red-200/15 text-red-500 font-bold px-2 py-1 mr-2 rounded w-fit"
+                    className="bg-red-200 dark:bg-red-600/15 text-red-500 font-bold px-2 py-1 mr-2 rounded w-fit text-xs"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleUpdateClick}
-                    className="bg-blue-200 dark:bg-blue-200/15 text-blue-500 font-bold px-2 py-1 rounded w-fit"
+                    className="bg-blue-200 dark:bg-blue-600/15 text-blue-500 font-bold px-2 py-1 rounded w-fit text-xs"
                   >
                     Save Details
                   </button>
                 </div>
               ) : (
                 <div className="flex flex-col items-end md:items-stretch md:flex-row gap-2">
-                  <button
-                    onClick={() => setIsEditMode(true)}
-                    className="bg-blue-200 dark:bg-blue-200/15 text-blue-500 font-bold px-2 py-1 rounded w-fit flex items-center gap-1.5 group"
-                  >
-                    <MdEdit fontSize={15} />
-                    Edit Profile
-                  </button>
-
-                  <div className="py-2 px-3 rounded-md bg-blue-100 dark:bg-neutral-900 flex items-center gap-2 w-fit">
+                  <div className="py-1 px-2 rounded-md bg-blue-100 dark:bg-neutral-900 flex items-center gap-1 w-fit text-xs">
                     <div>
                       As {userData.employeeData.auth === 0 ? "an" : "a"}
                     </div>
@@ -544,6 +536,13 @@ const UserProfile = () => {
                       )}
                     </div>
                   </div>
+                  <button
+                    onClick={() => setIsEditMode(true)}
+                    className="bg-blue-200 dark:bg-blue-600/15 text-blue-500 font-bold px-2 py-1 rounded w-fit flex items-center gap-1.5 group text-xs"
+                  >
+                    {/* <MdEdit fontSize={15} /> */}
+                    Edit Profile
+                  </button>
                 </div>
               )}
 
