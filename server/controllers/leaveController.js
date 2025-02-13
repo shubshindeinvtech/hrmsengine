@@ -384,12 +384,14 @@ const leavehistory = async (req, res) => {
 
     function formatTime(dateString) {
       const date = new Date(dateString);
-      return date.toLocaleString("en-US", {
+      return date.toLocaleString("en-IN", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
-      }); // Example: 10:18 AM
+        timeZone: "Asia/Kolkata",
+      }); // Example: 10:18 AM (IST)
     }
+
 
     res.status(200).json({
       success: true,
