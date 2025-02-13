@@ -27,7 +27,7 @@ Ensure you have the following installed on your system:
    Using npm:
 
    ```bash
-   npm install
+   npm install --force
    ```
 
 ## Running the Project
