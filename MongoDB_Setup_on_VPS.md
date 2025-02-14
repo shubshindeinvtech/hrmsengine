@@ -163,3 +163,31 @@ MongoDB URI to Connect with projects:
   mongodb://username-here:password-here@127.0.0.1:27017/database_name
   mongodb://admin:spiderman@127.0.0.1:27017/admin
 ```
+
+### Access MongoDB
+
+```bash
+mongosh
+```
+
+```bash
+show dbs
+```
+
+```bash
+use your_db_name
+```
+
+```bash
+show collections
+```
+
+```bash
+db.collection_name.find()
+```
+
+perform other operations
+
+```bash
+.exit
+```

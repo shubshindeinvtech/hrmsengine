@@ -491,3 +491,30 @@ This is path of ssl from all domains in one ssl cert:
 ```bash
 /etc/letsencrypt/live/hrmsdev.invezzatech.com
 ```
+
+### 11. Access MongoDB
+
+```bash
+mongosh
+```
+
+```bash
+show dbs
+```
+
+```bash
+use your_db_name
+```
+
+```bash
+show collections
+```
+
+```bash
+db.collection_name.find()
+```
+perform other operations
+
+```bash
+.exit
+```
