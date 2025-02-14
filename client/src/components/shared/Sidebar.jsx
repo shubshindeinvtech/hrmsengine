@@ -193,7 +193,7 @@ export default function Sidebar({ theme }) {
         </div>
         <a
           className="bg-blue-500/20 text-blue-600 p-2 rounded-lg w-fit group cursor-pointer relative overflow-hidden"
-          href="https://github.com/shubshindeinvtech/hrmsengine/raw/main/client/src/assets/docs/HRMS%20Portal_User_Guide.pdf"
+          href="/docs/HRMS_Portal_User_Guide.pdf"
           download="HRMS_Portal_User_Guide.pdf"
         >
           <div className="flex items-center gap-1">
