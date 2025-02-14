@@ -399,7 +399,6 @@ const LeaveHistory = () => {
         </motion.div>
       ) : (
         <div
-          // className="grid gap-2 md:grid-cols-2 dark:bg-neutral-900 h-full overflow-y-scroll scrollbrhdn"
           className={
             filterHistory().length > 8
               ? "grid gap-2 md:grid-cols-2 dark:bg-neutral-900 h-full overflow-y-scroll scrollbrhdn"
@@ -409,7 +408,7 @@ const LeaveHistory = () => {
           {[...filterHistory()].reverse().map((record, index) => (
             <div
               key={index}
-              className="bg-white flex flex-col gap-2 dark:bg-neutral-800 rounded-xl  p-2 border border-gray-200 dark:border-neutral-700 h-fit"
+              className="bg-white flex flex-col gap-2 dark:bg-neutral-800 h-fit rounded-xl p-2 border border-gray-200 dark:border-neutral-700"
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-xs">
@@ -428,6 +427,7 @@ const LeaveHistory = () => {
                     : "Declined"}
                 </p>
               </div>
+
               <div className="flex gap-2 items-end justify-between">
                 <div className="flex flex-col gap-1">
                   <h3 className="text-base font-semibold">
@@ -448,7 +448,7 @@ const LeaveHistory = () => {
                           ? "text-yellow-200"
                           : record.leavesubtype === "Vacation Leave"
                           ? "text-green-300"
-                          : "text-gray-300" // Default color for any other leave types
+                          : "text-gray-300"
                       }
                     >
                       {record.leavetype === "Optional holiday"
@@ -456,66 +456,51 @@ const LeaveHistory = () => {
                         : `${record.leavesubtype}`}
                     </h3>
                     {record.leavetype === "Optional holiday" ? "/" : ""}
-                    <h3>
-                      {record.holidayname ? (
-                        <span className="">{record.holidayname}</span>
-                      ) : (
-                        record.holidayname
-                      )}
-                    </h3>
+                    <h3>{record.holidayname || ""}</h3>
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  {record.applicationstatus === 0 ? (
+                  {record.applicationstatus === 0 && (
                     <button
-                      className="bg-sky-50 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/70 hover:bg-sky-100 p-2  rounded-md"
+                      className="bg-sky-50 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/70 hover:bg-sky-100 p-2 rounded-md"
                       onClick={() => handleDelete(record._id)}
                     >
                       <MdDelete />
                     </button>
-                  ) : (
-                    ""
                   )}
-                  {record.leavetype === "Optional holiday" ? (
-                    ""
-                  ) : (
-                    <div>
-                      <button
-                        onClick={() => toggleMoreInfo(index)}
-                        className="bg-sky-50 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/70 hover:bg-sky-100 p-1 rounded-md"
-                      >
-                        <FaCaretDown
-                          fontSize={20}
-                          className={
-                            expandedIndex === index
-                              ? "rotate-180 duration-300 "
-                              : "rotate-0 duration-300"
-                          }
-                        />
-                      </button>
-                    </div>
+                  {record.leavetype !== "Optional holiday" && (
+                    <button
+                      onClick={() => toggleMoreInfo(index)}
+                      className="bg-sky-50 dark:bg-neutral-900/30 dark:hover:bg-neutral-900/70 hover:bg-sky-100 p-1 rounded-md"
+                    >
+                      <FaCaretDown
+                        fontSize={20}
+                        className={`duration-300 ${
+                          expandedIndex === index ? "rotate-180" : "rotate-0"
+                        }`}
+                      />
+                    </button>
                   )}
                 </div>
               </div>
 
-              {expandedIndex === index && (
-                <div className="flex flex-col gap-2">
-                  <p>
-                    {record.leavetype === "Optional holiday" ? (
-                      ""
-                    ) : (
-                      <div>
-                        <strong>Cause - </strong>{" "}
-                        {record.reason || (
-                          <span className="text-xs">Not Mentioned</span>
-                        )}
-                      </div>
-                    )}
-                  </p>
-                  {record.comment && (
-                    <hr className="rounded-full dark:border-neutral-700 border-blue-100" />
+              {/* Expanded Content with Smooth Height Transition */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  expandedIndex === index
+                    ? "max-h-60 opacity-100"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <p className="mt-2">
+                  <strong>Cause - </strong>
+                  {record.reason || (
+                    <span className="text-xs">Not Mentioned</span>
                   )}
-                  {record.comment && (
+                </p>
+                {record.comment && (
+                  <>
+                    <hr className="rounded-full dark:border-neutral-700 border-blue-100" />
                     <div className="w-full flex flex-col gap-0.5">
                       <span className="text-xs text-neutral-400 text-center">
                         {record.updatedDate}
@@ -524,11 +509,7 @@ const LeaveHistory = () => {
                         <div className="bg-blue-600/20 text-blue-500 p-1 rounded-lg font-bold h-fit">
                           HR
                         </div>
-                        <p
-                          className={`${
-                            record.applicationstatus === 1 ? "" : ""
-                          } bg-blue-100 dark:bg-neutral-900 px-2 py-1 w-full rounded-b-lg rounded-tr-lg rounded-tl-sm flex flex-col items-cente gap-0.5`}
-                        >
+                        <p className="bg-blue-100 dark:bg-neutral-900 px-2 py-1 w-full rounded-b-lg rounded-tr-lg rounded-tl-sm flex flex-col gap-0.5">
                           {record.comment || "NA"}
                           <span className="text-xs text-neutral-400 text-end w-full">
                             {record.updatedTime}
@@ -536,9 +517,9 @@ const LeaveHistory = () => {
                         </p>
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
+                  </>
+                )}
+              </div>
             </div>
           ))}
         </div>

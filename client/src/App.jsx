@@ -25,6 +25,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthContext } from "../src/contexts/AuthContext";
 import NotFound from "./NotFound";
 import Timesheet from "./components/timesheet/TimeSheet";
+import Help from "./components/Help";
 
 //userprofile
 import UserProfile from "../src/components/userprofile/UserProfile";
@@ -102,6 +103,8 @@ function App() {
             path="/projects/viewproject/:projectId"
             element={<ViewProject />}
           />
+          <Route path="/help" element={<Help />} />
+          <Route path="/docs" />
         </>
       );
     } else if (userData?.employeeData?.auth === 2) {
@@ -124,6 +127,7 @@ function App() {
           <Route path="/myprofile" element={<UserProfile />} />
           <Route path="/leave" element={<UserLeave />} />
           <Route path="/Attendance" element={<AttendanceHistory />} />
+          <Route path="/help" element={<Help />} />
         </>
       );
     } else if (userData?.employeeData?.auth === 3) {
@@ -144,6 +148,7 @@ function App() {
           <Route path="/timesheet" element={<Timesheet />} />
           <Route path="/leave" element={<UserLeave />} />
           <Route path="/Attendance" element={<AttendanceHistory />} />
+          <Route path="/help" element={<Help />} />
         </>
       );
     } else {
@@ -155,6 +160,8 @@ function App() {
           <Route path="/timesheet" element={<Timesheet />} />
           <Route path="/leave" element={<UserLeave />} />
           <Route path="/Attendance" element={<AttendanceHistory />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/docs" />
           {/* <Route path="*" element={<NotFound />} /> */}
         </>
       );

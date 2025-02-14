@@ -62,7 +62,7 @@ Clone Your Backend Repository
 ```
 
 ```bash
- cd your-repo/server
+ cd hrmsengine/server
 ```
 
 Frontend folder location is
@@ -291,7 +291,7 @@ certbot renew --dry-run
 
 ### 7. Notes
 
-1. If you puch any new changes in repo
+1. If you push any new changes in repo
 
 ```bash
 git pull origin
