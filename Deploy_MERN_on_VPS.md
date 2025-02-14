@@ -513,6 +513,7 @@ show collections
 ```bash
 db.collection_name.find()
 ```
+
 perform other operations
 
 ```bash
