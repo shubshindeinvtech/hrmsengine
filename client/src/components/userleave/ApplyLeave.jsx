@@ -107,7 +107,6 @@ const ApplyLeave = () => {
     holidayname: "",
     reason: "",
     halfday: false,
-    halfday: "",
   });
   const [errors, setErrors] = useState([]);
   const [message, setMessage] = useState("");
