@@ -12,6 +12,8 @@ import { HiMenuAlt1 } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext"; // Add AuthContext import
 import { TbHelpSquareRoundedFilled } from "react-icons/tb";
+import { HiCloudDownload } from "react-icons/hi";
+import { FaDownload } from "react-icons/fa6";
 
 const LinkClasses =
   "flex hover:bg-sky-50 dark:hover:bg-neutral-800 hover:duration-500 p-3 mt-1.5 rounded-md euclid";
@@ -190,13 +192,23 @@ export default function Sidebar({ theme }) {
           ))}
         </div>
         <a
-          className="bg-blue-500/20 text-blue-600 p-2 rounded-lg w-fit group cursor-pointer"
-          href="https://github.com/shubshindeinvtech/hrmsengine/raw/main/client/src/assets/docs/HRMS%20Portal%20User%20Guide.pdf"
+          className="bg-blue-500/20 text-blue-600 p-2 rounded-lg w-fit group cursor-pointer relative overflow-hidden"
+          href="https://github.com/shubshindeinvtech/hrmsengine/raw/main/client/src/assets/docs/HRMS%20Portal_User_Guide.pdf"
           download="HRMS_Portal_User_Guide.pdf"
         >
-          <a className="flex items-center gap-1 group-hover:underline duration-300 group-hover:px-1 group-hover:font-bold">
-            <TbHelpSquareRoundedFilled fontSize={22} /> Help
-          </a>
+          <div className="flex items-center gap-1">
+            {/* Help Icon (Moves Down on Hover) */}
+            <span className="flex transform transition-transform duration-300 ease-in-out group-hover:translate-y-5 group-hover:opacity-0 opacity-100">
+              <TbHelpSquareRoundedFilled fontSize={22} />
+            </span>
+
+            {/* Download Icon (Comes from Top on Hover) */}
+            <span className="absolute top-0 flex transform -translate-y-5 opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-2.5 group-hover:opacity-100">
+              <HiCloudDownload fontSize={22} />
+            </span>
+
+            <span className="transition-all duration-300">Help</span>
+          </div>
         </a>
       </div>
     </div>
