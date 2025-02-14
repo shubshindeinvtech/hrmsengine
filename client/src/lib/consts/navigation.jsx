@@ -10,7 +10,6 @@ import { BsPeopleFill } from "react-icons/bs";
 import { FaBusinessTime } from "react-icons/fa6";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { HiUser } from "react-icons/hi2";
-import { TbHelpSquareRoundedFilled } from "react-icons/tb";
 
 export const DASHBOARD_SIDEBAR_LINKS = [
   {
@@ -98,13 +97,6 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     path: "/settings",
     icon: <RiSettings2Fill />,
     allowedAuth: [1, 2], // only admin can access
-  },
-  {
-    key: "help",
-    label: "Help",
-    path: "/help",
-    icon: <TbHelpSquareRoundedFilled />,
-    allowedAuth: [0, 1, 2, 3],
   },
 ];
 

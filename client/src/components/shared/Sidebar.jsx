@@ -11,6 +11,7 @@ import { TbLayoutSidebarLeftCollapseFilled } from "react-icons/tb";
 import { HiMenuAlt1 } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext"; // Add AuthContext import
+import { TbHelpSquareRoundedFilled } from "react-icons/tb";
 
 const LinkClasses =
   "flex hover:bg-sky-50 dark:hover:bg-neutral-800 hover:duration-500 p-3 mt-1.5 rounded-md euclid";
@@ -188,6 +189,15 @@ export default function Sidebar({ theme }) {
             </React.Fragment>
           ))}
         </div>
+        <a
+          className="bg-blue-500/20 text-blue-600 p-2 rounded-lg w-fit group cursor-pointer"
+          href="https://github.com/shubshindeinvtech/hrmsengine/raw/main/client/src/assets/docs/HRMS%20Portal%20User%20Guide.pdf"
+          download="HRMS_Portal_User_Guide.pdf"
+        >
+          <a className="flex items-center gap-1 group-hover:underline duration-300 group-hover:px-1 group-hover:font-bold">
+            <TbHelpSquareRoundedFilled fontSize={22} /> Help
+          </a>
+        </a>
       </div>
     </div>
   );
