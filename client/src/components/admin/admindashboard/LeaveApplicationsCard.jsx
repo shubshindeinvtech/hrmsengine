@@ -21,7 +21,11 @@ const LeaveApplicationsCard = () => {
 
   // Format the date to "YYYY-MM-DD"
   const formatDate = (date) => {
-    return date.toISOString().split("T")[0];
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      console.error("Invalid date provided:", date);
+      return ""; // Return an empty string or handle accordingly
+    }
+    return date.toISOString().split("T")[0]; // "YYYY-MM-DD"
   };
 
   const fetchLeaveRecords = async () => {
