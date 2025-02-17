@@ -153,6 +153,10 @@ const OpenCalendar = ({
 
   const formatDate = (date) => {
     const d = new Date(date);
+    if (isNaN(d)) {
+      console.error("Invalid date:", date);
+      return null;
+    }
     return d.toISOString().split("T")[0];
   };
 
