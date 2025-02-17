@@ -93,9 +93,9 @@ const Calendar = ({ onDateChange }) => {
     return date.toLocaleDateString("en-GB", options);
   };
 
-  useEffect(() => {
-    setCurrentDate(new Date(currentDate).toISOString().split("T")[0]);
-  }, [currentDate]);
+  // useEffect(() => {
+  //   setCurrentDate(new Date(currentDate).toISOString().split("T")[0]);
+  // }, [currentDate]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
