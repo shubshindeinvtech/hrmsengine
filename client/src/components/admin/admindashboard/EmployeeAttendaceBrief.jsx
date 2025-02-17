@@ -18,10 +18,6 @@ import AniversaryCard from "./AniversaryCard";
 
 // Helper function to format the date in the required format
 const formatDate = (date) => {
-  if (!(date instanceof Date) || isNaN(date.getTime())) {
-    console.error("Invalid date provided:", date);
-    return ""; // Return an empty string or handle accordingly
-  }
   return date.toISOString().split("T")[0]; // "YYYY-MM-DD"
 };
 
