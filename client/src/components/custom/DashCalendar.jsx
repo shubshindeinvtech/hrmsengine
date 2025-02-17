@@ -101,9 +101,9 @@ const DashCalendar = ({
 
   const classes = useStyles();
 
-  useEffect(() => {
-    setCurrentDate(new Date(currentDate).toISOString().split("T")[0]);
-  }, [currentDate]);
+  // useEffect(() => {
+  //   setCurrentDate(new Date(currentDate).toISOString().split("T")[0]);
+  // }, [currentDate]);
 
   const formatFullDate = (date) => {
     const options = {
@@ -158,8 +158,9 @@ const DashCalendar = ({
   const years = Array.from({ length: 20 }, (_, i) => currentYear - 10 + i);
 
   const formatDate = (date) => {
+    if (!date) return ""; // Handle empty values
     const d = new Date(date);
-    return d.toISOString().split("T")[0];
+    return !isNaN(d) ? d.toISOString().split("T")[0] : "Invalid Date";
   };
 
   const getHolidayDetails = (day) => {
