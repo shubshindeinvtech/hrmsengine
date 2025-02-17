@@ -158,11 +158,6 @@ const OpenCalendar = ({
 
   const getHolidayDetails = (day) => {
     const date = formatDate(new Date(currentYear, currentMonth, day + 1));
-    if (isNaN(date.getTime())) {
-      console.error("Invalid date", date);
-      return []; // return empty if date is invalid
-    }
-
     const holidayDetails = [];
     mandatoryholiday.forEach((h) => {
       if (formatDate(h.date) === date)
