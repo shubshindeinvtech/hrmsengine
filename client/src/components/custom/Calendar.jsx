@@ -121,9 +121,17 @@ const Calendar = ({ onDateChange }) => {
 
   const handleDateClick = (day) => {
     const newDate = new Date(currentYear, currentMonth, day + 1, 12); // Setting time to noon
-    setCurrentDate(newDate.toISOString().split("T")[0]);
+    if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+      setCurrentDate(newDate.toISOString().split("T")[0]);
+    } else {
+      console.error("Invalid date:", newDate);
+    }
     setShowCalendar(false);
-    onDateChange(newDate.toISOString().split("T")[0]); // Pass selected date to parent component
+    if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+      onDateChange(newDate.toISOString().split("T")[0]);
+    } else {
+      console.error("Invalid date:", newDate);
+    } // Pass selected date to parent component
   };
 
   const handleMonthChange = (direction) => {

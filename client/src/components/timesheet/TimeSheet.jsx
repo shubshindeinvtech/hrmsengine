@@ -231,7 +231,11 @@ export default function TimeSheet({ record, index }) {
 
   const handleDateClick = (day) => {
     const newDate = new Date(currentYear, currentMonth, day + 1, 12); // Setting time to noon
-    setCurrentDate(newDate.toISOString().split("T")[0]);
+    if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+      setCurrentDate(newDate.toISOString().split("T")[0]);
+    } else {
+      console.error("Invalid date:", newDate);
+    }
     const isAbsent = absentdates.includes(newDate);
     if (isAbsent) {
       setAbsentday(true);
