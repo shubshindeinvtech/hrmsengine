@@ -79,9 +79,9 @@ const useStyles = makeStyles({
 const Calendar = ({ onDateChange }) => {
   const classes = useStyles();
   const [showCalendar, setShowCalendar] = useState(false);
-  const [currentDate, setCurrentDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  // const [currentDate, setCurrentDate] = useState(
+  //   new Date().toISOString().split("T")[0]
+  // );
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
@@ -93,9 +93,16 @@ const Calendar = ({ onDateChange }) => {
     return date.toLocaleDateString("en-GB", options);
   };
 
-  useEffect(() => {
-    setCurrentDate(new Date(currentDate).toISOString().split("T")[0]);
-  }, [currentDate]);
+  const [currentDate, setCurrentDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  });
+
+  // useEffect(() => {
+  //   if (!isNaN(new Date(currentDate).getTime())) {
+  //     setCurrentDate(new Date(currentDate).toISOString().split("T")[0]);
+  //   }
+  // }, [currentDate]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -121,17 +128,15 @@ const Calendar = ({ onDateChange }) => {
 
   const handleDateClick = (day) => {
     const newDate = new Date(currentYear, currentMonth, day + 1, 12); // Setting time to noon
-    if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+    if (!isNaN(newDate.getTime())) {
       setCurrentDate(newDate.toISOString().split("T")[0]);
-    } else {
-      console.error("Invalid date:", newDate);
-    }
-    setShowCalendar(false);
-    if (newDate instanceof Date && !isNaN(newDate.getTime())) {
       onDateChange(newDate.toISOString().split("T")[0]);
     } else {
-      console.error("Invalid date:", newDate);
-    } // Pass selected date to parent component
+      console.error("Invalid date selected:", newDate);
+    }
+    // setCurrentDate(newDate.toISOString().split("T")[0]);
+    setShowCalendar(false);
+    // onDateChange(newDate.toISOString().split("T")[0]); // Pass selected date to parent component
   };
 
   const handleMonthChange = (direction) => {
