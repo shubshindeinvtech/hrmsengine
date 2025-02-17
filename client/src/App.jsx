@@ -102,6 +102,7 @@ function App() {
             path="/projects/viewproject/:projectId"
             element={<ViewProject />}
           />
+          <Route path="/Attendance" element={<AttendanceHistory />} />
         </>
       );
     } else if (userData?.employeeData?.auth === 2) {

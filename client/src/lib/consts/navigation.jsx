@@ -61,7 +61,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: "Attendance",
     path: "/Attendance",
     icon: <FaCalendarDays />,
-    allowedAuth: [0, 2, 3], // user only
+    allowedAuth: [0, 1, 2, 3], // user only
   },
   {
     key: "leave",
