@@ -79,9 +79,10 @@ const useStyles = makeStyles({
 const Calendar = ({ onDateChange }) => {
   const classes = useStyles();
   const [showCalendar, setShowCalendar] = useState(false);
-  const [currentDate, setCurrentDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [currentDate, setCurrentDate] = useState(() => {
+    const today = new Date();
+    return !isNaN(today.getTime()) ? today.toISOString().split("T")[0] : "";
+  });
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
